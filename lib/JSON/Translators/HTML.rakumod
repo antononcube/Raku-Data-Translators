@@ -41,8 +41,7 @@ class JSON::Translators::HTML {
 
         my $converted = self.convert-json-node($json-input);
 
-        return $!encode ?? $converted.encode('ascii')
-                .trans(['<', '>', '&', '\'', '"'] => ['&lt;', '&gt;', '&amp;', '&#39;', '&quot;']) !! $converted;
+        return $!encode ?? $converted.encode('ascii').trans(['<', '>', '&', '\'', '"'] => ['&lt;', '&gt;', '&amp;', '&#39;', '&quot;']) !! $converted;
     }
 
     method column-headers-from-list-of-maps($json-input) {
