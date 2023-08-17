@@ -111,23 +111,34 @@ It is envisioned this package to have translators to other formats. For example:
 
 ### Articles 
 
-[AA1] Anton Antonov,
-["Workflows with LLM functions"](),
-(2023),
-[RakuForPrediction at WordPress]().
+[AA1] Anton Antonov, 
+["Workflows with LLM functions"](https://rakuforprediction.wordpress.com/2023/08/01/workflows-with-llm-functions/), 
+(2023), 
+[RakuForPrediction at WordPress](https://rakuforprediction.wordpress.com).
 
 [AA2] Anton Antonov,
-["Workflows with LLM functions"](),
+["TLDR LLM solutions for software manuals"](https://rakuforprediction.wordpress.com/2023/08/15/tldr-llm-solutions-for-software-manuals/),
 (2023),
-[RakuForPrediction at WordPress]().
+[RakuForPrediction at WordPress](https://rakuforprediction.wordpress.com).
 
 
 ### Packages
 
 [AAp1] Anton Antonov,
-[Data::Reshapers Raku package](),
+[Data::Reshapers Raku package](https://github.com/antononcube/Raku-Data-Reshapers),
 (2021-2023),
-[GitHub/antononcube]().
+[GitHub/antononcube](https://github.com/antononcube).
+
+[AAp2] Anton Antonov,
+[Data::TypeSystem Raku package](https://github.com/antononcube/Raku-Data-TypeSystem),
+(2023),
+[GitHub/antononcube](https://github.com/antononcube).
+
+[AAp3] Anton Antonov, 
+[LLM::Functions Raku package](https://github.com/antononcube/Raku-LLM-Functions), 
+(2023), 
+[GitHub/antononcube](https://github.com/antononcube).
+
 
 [VMp1] Varun Malhotra,
 [json2html Python package](https://github.com/softvar/json2html),
