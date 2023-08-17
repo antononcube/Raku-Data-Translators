@@ -1,6 +1,6 @@
 use v6.d;
 
-use JSON::Actions::HTML;
+use JSON::Translators::HTML;
 
 unit module JSON::Translators;
 
@@ -8,7 +8,7 @@ proto sub json-to-html($spec, *%args) is export {*}
 
 multi sub json-to-html($spec, *%args) {
 
-    my $jtr = JSON::Actions::HTML.new;
+    my $jtr = JSON::Translators::HTML.new;
 
     return $jtr.convert($spec, |%args);
 }
