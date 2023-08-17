@@ -84,26 +84,28 @@ to-pretty-table(cross-tabulate(get-titanic-dataset, 'passengerSex', 'passengerSu
 
 ## Implementation notes
 
-- The "need" for this package become evident while working on the notebooks/articles [AA1, AA2]. 
+- The "need" for this package became evident while working on the notebooks/articles [AA1, AA2]. 
 - Initially, I translated plain text tables into HTML.
+  - Using LLMs or `md-interpret` provided by "Markdown::Grammar".
 - I considered re-using the code behind `to-pretty-table` provided by "Data::Reshapers", [AAp1].
-  - This was "too much work" and wanted a lighter weight package.
+  - This is "too much work" and I wanted a lighter weight package.
 - Having a solution for the more general problem ***translating JSON to HTML*** seemed a much better and easier option.  
   - For example, I hoped that someone has already solved that problem for Raku.
-- Since I did not find Raku packages for the translation I wanted I looked for solutions into the Python ecosystem.
+- Since I did not find Raku packages for the translation I wanted, I looked for solutions into the Python ecosystem.
   - ... And found ["json2html"](https://github.com/softvar/json2html).
 - Using ChatGPT-4.0 I translated the only class of that package from Python in Raku.
-- The translation executed with relative minor changes.
-  - I further refactored and enhanced it to fit Raku workflows.
+- The obtained translation could be executed with relatively minor changes.
+  - I further refactored and enhanced the HTML translator to fit my most frequent Raku workflows.
 
-It is envisioned this package to have translators to other formats. For example:
-- [ ] Plain text
-- [ ] Python
-- [ ] Mermaid-JS
-- [ ] R
-- [ ] Julia
-- [ ] WL
-- [ ] SQL
+It is envisioned this package to have translators to multiple formats. For example:
+- [X] DONE HTML
+- [ ] TODO Plain text
+- [ ] TODO Python
+- [ ] TODO Mermaid-JS
+- [ ] TODO R
+- [ ] TODO Julia
+- [ ] TODO WL
+- [ ] TODO SQL
 
 ------
 

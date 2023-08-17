@@ -25,7 +25,7 @@ use JSON::Translators;
 my $tbl = get-titanic-dataset.pick(3);
 ```
 ```
-# ({id => 683, passengerAge => -1, passengerClass => 3rd, passengerSex => female, passengerSurvival => died} {id => 556, passengerAge => 20, passengerClass => 2nd, passengerSex => male, passengerSurvival => died} {id => 158, passengerAge => -1, passengerClass => 1st, passengerSex => male, passengerSurvival => died})
+# ({id => 16, passengerAge => -1, passengerClass => 1st, passengerSex => male, passengerSurvival => died} {id => 167, passengerAge => -1, passengerClass => 1st, passengerSex => male, passengerSurvival => died} {id => 957, passengerAge => -1, passengerClass => 3rd, passengerSex => female, passengerSurvival => died})
 ```
 
 Here is the corresponding dataset type:
@@ -42,7 +42,7 @@ Here is the corresponding HTML table:
 ```perl6, results=asis
 $tbl ==> json-to-html
 ```
-<table border="1"><thead><tr><th>passengerSurvival</th><th>passengerClass</th><th>passengerSex</th><th>passengerAge</th><th>id</th></tr></thead><tbody><tr><td>died</td><td>3rd</td><td>female</td><td>-1</td><td>683</td></tr><tr><td>died</td><td>2nd</td><td>male</td><td>20</td><td>556</td></tr><tr><td>died</td><td>1st</td><td>male</td><td>-1</td><td>158</td></tr></tbody></table>
+<table border="1"><thead><tr><th>passengerClass</th><th>id</th><th>passengerSurvival</th><th>passengerAge</th><th>passengerSex</th></tr></thead><tbody><tr><td>1st</td><td>16</td><td>died</td><td>-1</td><td>male</td></tr><tr><td>1st</td><td>167</td><td>died</td><td>-1</td><td>male</td></tr><tr><td>3rd</td><td>957</td><td>died</td><td>-1</td><td>female</td></tr></tbody></table>
 
 
 We can specify field names and HTML table attributes:
@@ -50,7 +50,7 @@ We can specify field names and HTML table attributes:
 ```perl6, results=asis
 $tbl ==> json-to-html(field-names => <id passengerSurvival>, table-attributes => 'id="info-table" class="table table-bordered table-hover" text-align="center"');
 ```
-<table id="info-table" class="table table-bordered table-hover" text-align="center"><thead><tr><th>id</th><th>passengerSurvival</th></tr></thead><tbody><tr><td>683</td><td>died</td></tr><tr><td>556</td><td>died</td></tr><tr><td>158</td><td>died</td></tr></tbody></table>
+<table id="info-table" class="table table-bordered table-hover" text-align="center"><thead><tr><th>id</th><th>passengerSurvival</th></tr></thead><tbody><tr><td>16</td><td>died</td></tr><tr><td>167</td><td>died</td></tr><tr><td>957</td><td>died</td></tr></tbody></table>
 
 
 Here is how the transposed dataset is tabulated:
@@ -58,7 +58,7 @@ Here is how the transposed dataset is tabulated:
 ```perl6, results=asis
 $tbl ==> transpose() ==> json-to-html;
 ```
-<table border="1"><tr><th>id</th><td><ul><li>683</li><li>556</li><li>158</li></ul></td></tr><tr><th>passengerAge</th><td><ul><li>-1</li><li>20</li><li>-1</li></ul></td></tr><tr><th>passengerSurvival</th><td><ul><li>died</li><li>died</li><li>died</li></ul></td></tr><tr><th>passengerClass</th><td><ul><li>3rd</li><li>2nd</li><li>1st</li></ul></td></tr><tr><th>passengerSex</th><td><ul><li>female</li><li>male</li><li>male</li></ul></td></tr></table>
+<table border="1"><tr><th>passengerSex</th><td><ul><li>male</li><li>male</li><li>female</li></ul></td></tr><tr><th>passengerAge</th><td><ul><li>-1</li><li>-1</li><li>-1</li></ul></td></tr><tr><th>id</th><td><ul><li>16</li><li>167</li><li>957</li></ul></td></tr><tr><th>passengerClass</th><td><ul><li>1st</li><li>1st</li><li>3rd</li></ul></td></tr><tr><th>passengerSurvival</th><td><ul><li>died</li><li>died</li><li>died</li></ul></td></tr></table>
 
 
 ### From JSON strings
@@ -77,7 +77,7 @@ END
 
 json-to-html($json1);
 ```
-<table border="1"><tr><th>sample</th><td><table border="1"><thead><tr><th>desc</th><th>lang</th><th>name</th></tr></thead><tbody><tr><td>coverts json 2 html table format</td><td>python</td><td>json2html</td></tr><tr><td>clubbing same keys of array of objects</td><td>python</td><td>testing</td></tr></tbody></table></td></tr></table>
+<table border="1"><tr><th>sample</th><td><table border="1"><thead><tr><th>lang</th><th>name</th><th>desc</th></tr></thead><tbody><tr><td>python</td><td>json2html</td><td>coverts json 2 html table format</td></tr><tr><td>python</td><td>testing</td><td>clubbing same keys of array of objects</td></tr></tbody></table></td></tr></table>
 
 
 ### Cross-tabulated data
@@ -96,38 +96,40 @@ Compare the HTML table above with the following plain text table:
 to-pretty-table(cross-tabulate(get-titanic-dataset, 'passengerSex', 'passengerSurvival'))
 ```
 ```
-# +--------+----------+------+
-# |        | survived | died |
-# +--------+----------+------+
-# | female |   339    | 127  |
-# | male   |   161    | 682  |
-# +--------+----------+------+
+# +--------+------+----------+
+# |        | died | survived |
+# +--------+------+----------+
+# | female | 127  |   339    |
+# | male   | 682  |   161    |
+# +--------+------+----------+
 ```
 
 ------
 
 ## Implementation notes
 
-- The "need" for this package become evident while working on the notebooks/articles [AA1, AA2]. 
+- The "need" for this package became evident while working on the notebooks/articles [AA1, AA2]. 
 - Initially, I translated plain text tables into HTML.
+  - Using LLMs or `md-interpret` provided by "Markdown::Grammar".
 - I considered re-using the code behind `to-pretty-table` provided by "Data::Reshapers", [AAp1].
-  - This was "too much work" and wanted a lighter weight package.
+  - This is "too much work" and I wanted a lighter weight package.
 - Having a solution for the more general problem ***translating JSON to HTML*** seemed a much better and easier option.  
   - For example, I hoped that someone has already solved that problem for Raku.
-- Since I did not find Raku packages for the translation I wanted I looked for solutions into the Python ecosystem.
+- Since I did not find Raku packages for the translation I wanted, I looked for solutions into the Python ecosystem.
   - ... And found ["json2html"](https://github.com/softvar/json2html).
 - Using ChatGPT-4.0 I translated the only class of that package from Python in Raku.
-- The translation executed with relative minor changes.
-  - I further refactored and enhanced it to fit Raku workflows.
+- The obtained translation could be executed with relatively minor changes.
+  - I further refactored and enhanced the HTML translator to fit my most frequent Raku workflows.
 
-It is envisioned this package to have translators to other formats. For example:
-- [ ] Plain text
-- [ ] Python
-- [ ] Mermaid-JS
-- [ ] R
-- [ ] Julia
-- [ ] WL
-- [ ] SQL
+It is envisioned this package to have translators to multiple formats. For example:
+- [X] DONE HTML
+- [ ] TODO Plain text
+- [ ] TODO Python
+- [ ] TODO Mermaid-JS
+- [ ] TODO R
+- [ ] TODO Julia
+- [ ] TODO WL
+- [ ] TODO SQL
 
 ------
 
