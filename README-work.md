@@ -34,7 +34,13 @@ deduce-type($tbl);
 Here is the corresponding HTML table:
 
 ```perl6, results=asis
-$tbl ==> json-to-html;
+$tbl ==> json-to-html
+```
+
+We can specify field names and HTML table attributes:
+
+```perl6, results=asis
+$tbl ==> json-to-html(field-names => <id passengerSurvival>, table-attributes => 'id="info-table" class="table table-bordered table-hover" text-align="center"');
 ```
 
 Here is how the transposed dataset is tabulated:
@@ -73,3 +79,57 @@ Compare the HTML table above with the following plain text table:
 ```perl6
 to-pretty-table(cross-tabulate(get-titanic-dataset, 'passengerSex', 'passengerSurvival'))
 ```
+
+------
+
+## Implementation notes
+
+- The "need" for this package become evident while working on the notebooks/articles [AA1, AA2]. 
+- Initially, I translated plain text tables into HTML.
+- I considered re-using the code behind `to-pretty-table` provided by "Data::Reshapers", [AAp1].
+  - This was "too much work" and wanted a lighter weight package.
+- Having a solution for the more general problem ***translating JSON to HTML*** seemed a much better and easier option.  
+  - For example, I hoped that someone has already solved that problem for Raku.
+- Since I did not find Raku packages for the translation I wanted I looked for solutions into the Python ecosystem.
+  - ... And found ["json2html"](https://github.com/softvar/json2html).
+- Using ChatGPT-4.0 I translated the only class of that package from Python in Raku.
+- The translation executed with relative minor changes.
+  - I further refactored and enhanced it to fit Raku workflows.
+
+It is envisioned this package to have translators to other formats. For example:
+- [ ] Plain text
+- [ ] Python
+- [ ] Mermaid-JS
+- [ ] R
+- [ ] Julia
+- [ ] WL
+- [ ] SQL
+
+------
+
+## References
+
+### Articles 
+
+[AA1] Anton Antonov,
+["Workflows with LLM functions"](),
+(2023),
+[RakuForPrediction at WordPress]().
+
+[AA2] Anton Antonov,
+["Workflows with LLM functions"](),
+(2023),
+[RakuForPrediction at WordPress]().
+
+
+### Packages
+
+[AAp1] Anton Antonov,
+[Data::Reshapers Raku package](),
+(2021-2023),
+[GitHub/antononcube]().
+
+[VMp1] Varun Malhotra,
+[json2html Python package](https://github.com/softvar/json2html),
+(2013-2021),
+[GitHub/softvar](https://github.com/softvar).
