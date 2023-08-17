@@ -4,20 +4,21 @@ use JSON::Fast;
 use Data::TypeSystem;
 
 class JSON::Translators::HTML {
-    has $.table-init-markup;
-    has $.clubbing = True;
-    has $.escape = True;
+    has $!table-init-markup;
+    has Str $.table-attributes = 'border="1"';
+    has Bool $.clubbing = True;
+    has Bool $.escape = True;
+    has Bool $.encode = False;
+    has $.field-names = Whatever;
 
-    method convert(
-            $json = "",
-            $table-attributes = 'border="1"',
-            $clubbing = True,
-            $encode = False,
-            $escape = True
-                   ) {
-        $!table-init-markup = "<table $table-attributes>";
-        $!clubbing = $clubbing;
-        $!escape = $escape;
+    submethod TWEAK {
+        $!table-init-markup = "<table $!table-attributes>";
+        if $!field-names ~~ Str:D {
+            $!field-names = [$!field-names,];
+        }
+    }
+
+    method convert($json = "") {
 
         return Empty unless $json;
 
@@ -40,12 +41,19 @@ class JSON::Translators::HTML {
 
         my $converted = self.convert-json-node($json-input);
 
-        return $encode ?? $converted.encode('ascii').trans(['<', '>', '&', '\'', '"'] => ['&lt;', '&gt;', '&amp;', '&#39;', '&quot;']) !! $converted;
+        return $!encode ?? $converted.encode('ascii')
+                .trans(['<', '>', '&', '\'', '"'] => ['&lt;', '&gt;', '&amp;', '&#39;', '&quot;']) !! $converted;
     }
 
     method column-headers-from-list-of-maps($json-input) {
         if is-reshapable($json-input, iterable-type => Positional, record-type => Map) {
             my @column-headers = $json-input[0].keys;
+            if $!field-names ~~ Positional && $!field-names.all ~~ Str:D {
+                @column-headers = $!field-names.grep({ $_ ∈ @column-headers }).Array;
+                if !@column-headers {
+                    note "The empty set of field names is obtained after filtering";
+                }
+            }
             return @column-headers;
         } else {
             return [];
@@ -91,10 +99,18 @@ class JSON::Translators::HTML {
     method convert-object(%json-input) {
         return "" unless %json-input;
         my $converted-output = $!table-init-markup ~ '<tr>';
-        for %json-input.kv -> $k, $v {
-            $converted-output ~= "<th>{ self.convert-json-node($k) }</th><td>{ self.convert-json-node($v) }</td>";
+        my @res;
+        my @pairs =
+                do if $!field-names ~~ Positional {
+                    $!field-names.map({ $_ => %json-input{$_} })
+                } else {
+                    %json-input.pairs
+                };
+
+        for @pairs -> $p {
+            @res.push("<th>{ self.convert-json-node($p.key) }</th><td>{ self.convert-json-node($p.value) }</td>");
         }
-        $converted-output ~= "</tr></table>";
+        $converted-output ~= @res.join('</tr><tr>') ~ "</tr></table>";
         return $converted-output;
     }
 }

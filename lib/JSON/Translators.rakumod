@@ -8,7 +8,7 @@ proto sub json-to-html($spec, *%args) is export {*}
 
 multi sub json-to-html($spec, *%args) {
 
-    my $jtr = JSON::Translators::HTML.new;
+    my $jtr = JSON::Translators::HTML.new(|%args);
 
-    return $jtr.convert($spec, |%args);
+    return $jtr.convert($spec);
 }
