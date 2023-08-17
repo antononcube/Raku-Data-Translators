@@ -2,16 +2,48 @@
 
 Raku package for translation of JSON specs or JSON-like data structures into other formats.
 
-### Basic usage
+## Basic usage
+
+## Main use case
 
 Here is a "main use case" example:
+1. Get a dataset that is an array of hashes
+2. Filter or sample the records
+3. Make an HTML table with those records
 
-```perl6, results=asis
+The HTML table outputs can be used to present datasets nicely in:
+- Markdown documents 
+- Jupyter notebooks
+
+Here we get the Titanic dataset and sample it:
+
+```perl6
 use Data::Reshapers;
+use Data::TypeSystem;
 use JSON::Translators;
 
-json-to-html(get-titanic-dataset.pick(5));
+my $tbl = get-titanic-dataset.pick(3);
 ```
+
+Here is the corresponding dataset type:
+
+```perl6
+deduce-type($tbl);
+```
+
+Here is the corresponding HTML table:
+
+```perl6, results=asis
+$tbl ==> json-to-html;
+```
+
+Here is how the transposed dataset is tabulated:
+
+```perl6, results=asis
+$tbl ==> transpose() ==> json-to-html;
+```
+
+### From JSON strings
 
 Here is a JSON string translation to HTML:
 
@@ -27,6 +59,8 @@ END
 
 json-to-html($json1);
 ```
+
+### Cross-tabulated data
 
 Here is a more involved data example:
 
