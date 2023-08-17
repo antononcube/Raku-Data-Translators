@@ -1,0 +1,37 @@
+use v6.d;
+
+use lib '.';
+use lib './lib';
+
+use JSON::Translators;
+use JSON::Fast;
+use Test;
+
+#===========================================================
+## 1
+#===========================================================
+my $json1 = q:to/END/;
+{
+	"name": "Json2Html",
+	"desription": "converts json 2 html table format"
+}
+END
+
+my $res1 = q:to/END/;
+<table border="1">
+	<tr>
+		<th>name</th>
+		<td>Json2Html</td>
+	</tr>
+	<tr>
+		<th>desription</th>
+		<td>converts json 2 html table format</td>
+	</tr>
+</table>
+END
+
+is json-to-html($json1).subst(/\s/, ''):g, $res1.subst(/\s/, ''):g, 'basic';
+
+is json-to-html(from-json($json1)), json-to-html($res1), 'basic eqv';
+
+done-testing;
