@@ -15,6 +15,7 @@
   "build-depends": [],
   "test-depends": [],
   "provides": {
+    "Data::Translators": "lib/Data/Translators.rakumod",
     "Data::Translators::HTML": "lib/Data/Translators/HTML.rakumod",
     "Data::Translators::R": "lib/Data/Translators/R.rakumod"
   },
