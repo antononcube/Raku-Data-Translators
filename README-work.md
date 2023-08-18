@@ -1,4 +1,4 @@
-# JSON::Translators 
+# Data::Translators 
 
 Raku package for translation of JSON specs or JSON-like data structures into other formats.
 
@@ -22,7 +22,7 @@ while doing Literate programming with Raku using:
 The use of JSON came to focus, since when working Large Language Model (LLM) functions, [AAp3],
 very often it is requested from LLMs to produce output in JSON format, [AA1, AA2].
 
-The package "Data::Reshapers", [AAp1], would complement nicely "JSON::Translators" and vice versa.
+The package "Data::Reshapers", [AAp1], would complement nicely "Data::Translators" and vice versa.
 The package "Data::TypeSystem", [AAp2], is used for "translation decisions" and for conversions into more regular datasets. 
 
 The package "Mathematica::Serializer", [AAp5], has very similar mission --
@@ -38,7 +38,7 @@ Package installations from both sources use [zef installer](https://github.com/u
 To install the package from [Zef ecosystem](https://raku.land/) use the shell command:
 
 ```
-zef install JSON::Translators
+zef install Data::Translators
 ```
 
 To install the package from the GitHub repository use the shell command:
@@ -68,7 +68,7 @@ Here we get the Titanic dataset and sample it:
 ```perl6
 use Data::Reshapers;
 use Data::TypeSystem;
-use JSON::Translators;
+use Data::Translators;
 
 my $tbl = get-titanic-dataset.pick(3);
 ```
