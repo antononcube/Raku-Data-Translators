@@ -15,6 +15,7 @@
   "test-depends": [],
   "provides": {
     "JSON::Translators::HTML": "lib/JSON/Translators/HTML.rakumod",
+    "JSON::Translators::R": "lib/JSON/Translators/R.rakumod",
     "JSON::Translators": "lib/JSON/Translators.rakumod"
   },
   "resources": [],
