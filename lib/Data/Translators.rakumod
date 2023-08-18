@@ -1,12 +1,12 @@
 use v6.d;
 
-use JSON::Translators::HTML;
-use JSON::Translators::R;
+use Data::Translators::HTML;
+use Data::Translators::R;
 use Data::TypeSystem;
 use Data::TypeSystem::Predicates;
 use Hash::Merge;
 
-unit module JSON::Translators;
+unit module Data::Translators;
 
 #===========================================================
 # JSON to HTML
@@ -21,7 +21,7 @@ proto sub json-to-html($data, *%args) is export {*}
 
 multi sub json-to-html($data, *%args) {
 
-    my $jtr = JSON::Translators::HTML.new(|%args);
+    my $jtr = Data::Translators::HTML.new(|%args);
 
     return $jtr.convert($data);
 }
@@ -36,7 +36,7 @@ proto sub json-to-r($data, *%args) is export {*}
 
 multi sub json-to-r($data, *%args) {
 
-    my $jtr = JSON::Translators::R.new(|%args);
+    my $jtr = Data::Translators::R.new(|%args);
 
     return $jtr.convert($data);
 }

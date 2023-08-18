@@ -4,8 +4,8 @@ use v6.d;
 use lib '.';
 use lib './lib';
 
-use JSON::Translators;
-use JSON::Translators::HTML;
+use Data::Translators;
+use Data::Translators::HTML;
 
 use JSON::Fast;
 
@@ -21,7 +21,7 @@ jsonObject = {
 }
 END
 
-my $jtr = JSON::Translators::HTML.new;
+my $jtr = Data::Translators::HTML.new;
 
 say $jtr.convert($spec);
 

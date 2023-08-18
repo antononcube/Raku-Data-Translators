@@ -3,7 +3,7 @@ use v6.d;
 use JSON::Fast;
 use Data::TypeSystem;
 
-class JSON::Translators::HTML {
+class Data::Translators::HTML {
     has $!table-init-markup;
     has Str $.table-attributes = 'border="1"';
     has Bool $.clubbing = True;

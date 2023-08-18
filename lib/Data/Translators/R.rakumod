@@ -2,10 +2,10 @@ use v6.d;
 
 use JSON::Fast;
 use Data::TypeSystem;
-use JSON::Translators::HTML;
+use Data::Translators::HTML;
 
-class JSON::Translators::R
-        is JSON::Translators::HTML {
+class Data::Translators::R
+        is Data::Translators::HTML {
 
     submethod TWEAK {
         self.escape = False;
