@@ -2,6 +2,9 @@ use v6.d;
 
 use JSON::Translators::HTML;
 use JSON::Translators::R;
+use Data::TypeSystem;
+use Data::TypeSystem::Predicates;
+use Hash::Merge;
 
 unit module JSON::Translators;
 
@@ -36,4 +39,49 @@ multi sub json-to-r($data, *%args) {
     my $jtr = JSON::Translators::R.new(|%args);
 
     return $jtr.convert($data);
+}
+
+#===========================================================
+# To dataset
+#===========================================================
+#| Convert a data structures to dataset (a Positional of Positionals or Maps.)
+#| C<$data> -- Data to convert.
+#| C<$missing-value> -- The value for missing values in the result dataset.
+proto sub to-dataset($data, :$missing-value = '') is export {*}
+
+multi sub to-dataset($data where $data ~~ Numeric || $data ~~ Str || $data ~~ DateTime) {
+    return [[$data,],];
+}
+
+multi sub to-dataset($data, :$missing-value = '') {
+    given $data {
+        when (is-reshapable(Iterable, Associative, $_) || is-reshapable(Positional, Iterable, $_)) && has-homogeneous-shape($_) {
+            return $data;
+        }
+
+        when is-array-of-hashes($_) {
+            my @allColnames = $_>>.keys.flat.unique;
+            my %emptyRow = @allColnames X=> $missing-value;
+            return $_.map({ merge-hash(%emptyRow, $_) }).Array;
+        }
+
+        when is-hash-of-hashes($_) {
+            my @allColnames = $_.values>>.keys.flat.unique;
+            my %emptyRow = @allColnames X=> $missing-value;
+            return $_.map({ $_.key => merge-hash(%emptyRow, $_.value) }).Hash;
+        }
+
+        when $_ ~~ Hash && ($_.values.all ~~ Str || $_.values.all ~~ Numeric || $_.values.all ~~ DateTime) {
+            return $_.map({ Hash.new( <Key Value> Z=> $_.kv ) });
+        }
+
+        when $_ ~~ Iterable && $_.all ~~ Pair {
+            return $_.map({ Hash.new( <Key Value> Z=> $_.kv ) });
+        }
+
+        default {
+            note 'Do not know how to process the data argument.';
+            return $_;
+        }
+    }
 }
