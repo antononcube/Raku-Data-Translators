@@ -3,7 +3,7 @@ use v6.d;
 use lib '.';
 use lib './lib';
 
-use JSON::Translators;
+use Data::Translators;
 use JSON::Fast;
 use Test;
 
