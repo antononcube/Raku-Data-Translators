@@ -55,28 +55,28 @@ multi sub to-dataset($data where $data ~~ Numeric || $data ~~ Str || $data ~~ Da
 
 multi sub to-dataset($data, :$missing-value = '') {
     given $data {
-        when (is-reshapable(Iterable, Associative, $_) || is-reshapable(Positional, Iterable, $_)) && has-homogeneous-shape($_) {
+        when (is-reshapable(Iterable, Map, $_) || is-reshapable(Positional, Iterable, $_)) && has-homogeneous-shape($_) {
             return $data;
         }
 
         when is-array-of-hashes($_) {
-            my @allColnames = $_>>.keys.flat.unique;
+            my @allColnames = $_>>.keys.flat.unique.Array;
             my %emptyRow = @allColnames X=> $missing-value;
             return $_.map({ merge-hash(%emptyRow, $_) }).Array;
         }
 
         when is-hash-of-hashes($_) {
-            my @allColnames = $_.values>>.keys.flat.unique;
+            my @allColnames = $_.values>>.keys.flat.unique.Array;
             my %emptyRow = @allColnames X=> $missing-value;
             return $_.map({ $_.key => merge-hash(%emptyRow, $_.value) }).Hash;
         }
 
         when $_ ~~ Hash && ($_.values.all ~~ Str || $_.values.all ~~ Numeric || $_.values.all ~~ DateTime) {
-            return $_.map({ Hash.new( <Key Value> Z=> $_.kv ) });
+            return $_.map({ Hash.new( <Key Value> Z=> $_.kv ) }).Array;
         }
 
         when $_ ~~ Iterable && $_.all ~~ Pair {
-            return $_.map({ Hash.new( <Key Value> Z=> $_.kv ) });
+            return $_.map({ Hash.new( <Key Value> Z=> $_.kv ) }).Array;
         }
 
         default {
