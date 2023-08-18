@@ -77,11 +77,9 @@ class JSON::Translators::HTML {
         @column-headers = self.column-headers-from-list-of-maps(@list-input) if $!clubbing;
         if @column-headers {
             $converted-output ~= $!table-init-markup;
-            if @column-headers {
-                $converted-output ~= '<thead>';
-                $converted-output ~= '<tr><th>' ~ @column-headers.join('</th><th>') ~ '</th></tr>';
-                $converted-output ~= '</thead>';
-            }
+            $converted-output ~= '<thead>';
+            $converted-output ~= '<tr><th>' ~ @column-headers.join('</th><th>') ~ '</th></tr>';
+            $converted-output ~= '</thead>';
             $converted-output ~= '<tbody>';
 
             for @list-input -> %entry {
