@@ -8,8 +8,9 @@
   ],
   "auth": "zef:antononcube",
   "depends": [
-    "JSON::Fast",
-    "Data::TypeSystem"
+    "JSON::Fast:ver<0.19+>",
+    "Data::TypeSystem:ver<0.1.2+>",
+    "Hash::Merge:ver<2.0.0+>:api<2+>"
   ],
   "build-depends": [],
   "test-depends": [],
