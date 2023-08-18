@@ -1,8 +1,32 @@
 # JSON::Translators 
 
 Raku package for translation of JSON specs or JSON-like data structures into other formats.
-(HTML, R, WL.)
 
+It is envisioned this package to have translators to multiple formats. For example:
+- [X] DONE HTML
+- [X] DONE R
+- [ ] TODO Plain text
+- [ ] TODO Python
+- [ ] TODO Mermaid-JS
+- [ ] TODO Julia
+- [ ] TODO WL
+- [ ] TODO SQL
+
+The main motivation for making the package is to have convenient way of making tables 
+while doing Literate programming with Raku using:
+
+- Computational Markdown documents, [AAp4]
+- Jupyter notebooks, [BDp1]
+- Mathematica notebooks, [AAp4]
+
+The use of JSON came to focus, since when working Large Language Model (LLM) functions, [AAp3],
+very often it is requested from LLMs to produce output in JSON format, [AA1, AA2].
+
+The package "Data::Reshapers", [AAp1], would complement nicely "JSON::Translators" and vice versa.
+The package "Data::TypeSystem", [AAp2], is used for "translation decisions" and for conversions into more regular datasets. 
+
+The package "Mathematica::Serializer", [AAp5], has very similar mission --
+it is for translating Raku data structures into Mathematica (aka Wolfram Language or WL) code.
 
 ------
 
@@ -113,13 +137,28 @@ Here is the R code version of the Titanic data sample:
 $tbl ==> json-to-r(field-names => <id passengerClass passengerSex passengerAge passengerSurvival>)
 ```
 
-
 Here is the R code version of the contingency table:
 
 ```perl6, output.lang=r, output.prompt=NONE
 json-to-r(cross-tabulate(get-titanic-dataset, 'passengerSex', 'passengerSurvival'))
 ```
 
+### Nicer datasets
+
+In order to obtain datasets or more regular datasets the function `to-dataset` can be used.
+Here a rugged dataset is made regular and converted to an HTML table:
+
+```perl6, results=asis
+my @tbl2 = get-titanic-dataset.pick(6);
+@tbl2 = @tbl2.map({ $_.pick((1..5).pick).Hash });
+@tbl2 ==> to-dataset(missing-value=>'・') ==> json-to-html
+```
+
+Here a hash is transformed into dataset with columns `<Key Value>` and then converted into an HTML table:
+
+```perl6, results=asis
+{ 4 => 'a', 5 => 'b', 8 => 'c'} ==> to-dataset() ==> json-to-html
+```
 
 ------
 
@@ -134,19 +173,9 @@ json-to-r(cross-tabulate(get-titanic-dataset, 'passengerSex', 'passengerSurvival
   - For example, I hoped that someone has already solved that problem for Raku.
 - Since I did not find Raku packages for the translation I wanted, I looked for solutions into the Python ecosystem.
   - ... And found ["json2html"](https://github.com/softvar/json2html).
-- Using ChatGPT-4.0 I translated the only class of that package from Python in Raku.
+- Using ChatGPT-4.0 I translated the only class of that package from Python into Raku.
 - The obtained translation could be executed with relatively minor changes.
   - I further refactored and enhanced the HTML translator to fit my most frequent Raku workflows.
-
-It is envisioned this package to have translators to multiple formats. For example:
-- [X] DONE HTML
-- [X] DONE R
-- [ ] TODO Plain text
-- [ ] TODO Python
-- [ ] TODO Mermaid-JS
-- [ ] TODO Julia
-- [ ] TODO WL
-- [ ] TODO SQL
 
 ------
 
@@ -182,6 +211,20 @@ It is envisioned this package to have translators to multiple formats. For examp
 (2023), 
 [GitHub/antononcube](https://github.com/antononcube).
 
+[AAp4] Anton Antonov,
+[Text::CodeProcessing Raku package](https://github.com/antononcube/Raku-Text-CodeProcessing),
+(2021-2023),
+[GitHub/antononcube](https://github.com/antononcube).
+
+[AAp5] Anton Antonov,
+[Mathematica::Serializer Raku package](https://github.com/antononcube/Raku-Mathematica-Serializer),
+(2021-2022),
+[GitHub/antononcube](https://github.com/antononcube).
+
+[BDp1] Brian Duggan,
+[Jupyter:Kernel Raku package](https://github.com/bduggan/raku-jupyter-kernel),
+(2017-2023),
+[GitHub/bduggan](https://github.com/bduggan).
 
 [VMp1] Varun Malhotra,
 [json2html Python package](https://github.com/softvar/json2html),

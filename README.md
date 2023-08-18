@@ -1,8 +1,32 @@
 # JSON::Translators 
 
 Raku package for translation of JSON specs or JSON-like data structures into other formats.
-(HTML, R, WL.)
 
+It is envisioned this package to have translators to multiple formats. For example:
+- [X] DONE HTML
+- [X] DONE R
+- [ ] TODO Plain text
+- [ ] TODO Python
+- [ ] TODO Mermaid-JS
+- [ ] TODO Julia
+- [ ] TODO WL
+- [ ] TODO SQL
+
+The main motivation for making the package is to have convenient way of making tables 
+while doing Literate programming with Raku using:
+
+- Computational Markdown documents, [AAp4]
+- Jupyter notebooks, [BDp1]
+- Mathematica notebooks, [AAp4]
+
+The use of JSON came to focus, since when working Large Language Model (LLM) functions, [AAp3],
+very often it is requested from LLMs to produce output in JSON format, [AA1, AA2].
+
+The package "Data::Reshapers", [AAp1], would complement nicely "JSON::Translators" and vice versa.
+The package "Data::TypeSystem", [AAp2], is used for "translation decisions" and for conversions into more regular datasets. 
+
+The package "Mathematica::Serializer", [AAp5], has very similar mission --
+it is for translating Raku data structures into Mathematica (aka Wolfram Language or WL) code.
 
 ------
 
@@ -49,7 +73,7 @@ use JSON::Translators;
 my $tbl = get-titanic-dataset.pick(3);
 ```
 ```
-# ({id => 355, passengerAge => 20, passengerClass => 2nd, passengerSex => male, passengerSurvival => died} {id => 1258, passengerAge => 10, passengerClass => 3rd, passengerSex => female, passengerSurvival => survived} {id => 500, passengerAge => 30, passengerClass => 2nd, passengerSex => male, passengerSurvival => died})
+# ({id => 614, passengerAge => 30, passengerClass => 3rd, passengerSex => male, passengerSurvival => survived} {id => 922, passengerAge => -1, passengerClass => 3rd, passengerSex => male, passengerSurvival => died} {id => 510, passengerAge => 40, passengerClass => 2nd, passengerSex => male, passengerSurvival => died})
 ```
 
 Here is the corresponding dataset type:
@@ -66,7 +90,7 @@ Here is the corresponding HTML table:
 ```perl6, results=asis
 $tbl ==> json-to-html
 ```
-<table border="1"><thead><tr><th>passengerSurvival</th><th>passengerAge</th><th>passengerSex</th><th>passengerClass</th><th>id</th></tr></thead><tbody><tr><td>died</td><td>20</td><td>male</td><td>2nd</td><td>355</td></tr><tr><td>survived</td><td>10</td><td>female</td><td>3rd</td><td>1258</td></tr><tr><td>died</td><td>30</td><td>male</td><td>2nd</td><td>500</td></tr></tbody></table>
+<table border="1"><thead><tr><th>passengerSex</th><th>passengerClass</th><th>id</th><th>passengerSurvival</th><th>passengerAge</th></tr></thead><tbody><tr><td>male</td><td>3rd</td><td>614</td><td>survived</td><td>30</td></tr><tr><td>male</td><td>3rd</td><td>922</td><td>died</td><td>-1</td></tr><tr><td>male</td><td>2nd</td><td>510</td><td>died</td><td>40</td></tr></tbody></table>
 
 
 We can specify field names and HTML table attributes:
@@ -74,7 +98,7 @@ We can specify field names and HTML table attributes:
 ```perl6, results=asis
 $tbl ==> json-to-html(field-names => <id passengerSurvival>, table-attributes => 'id="info-table" class="table table-bordered table-hover" text-align="center"');
 ```
-<table id="info-table" class="table table-bordered table-hover" text-align="center"><thead><tr><th>id</th><th>passengerSurvival</th></tr></thead><tbody><tr><td>355</td><td>died</td></tr><tr><td>1258</td><td>survived</td></tr><tr><td>500</td><td>died</td></tr></tbody></table>
+<table id="info-table" class="table table-bordered table-hover" text-align="center"><thead><tr><th>id</th><th>passengerSurvival</th></tr></thead><tbody><tr><td>614</td><td>survived</td></tr><tr><td>922</td><td>died</td></tr><tr><td>510</td><td>died</td></tr></tbody></table>
 
 
 Here is how the transposed dataset is tabulated:
@@ -82,7 +106,7 @@ Here is how the transposed dataset is tabulated:
 ```perl6, results=asis
 $tbl ==> transpose() ==> json-to-html;
 ```
-<table border="1"><tr><th>passengerClass</th><td><ul><li>2nd</li><li>3rd</li><li>2nd</li></ul></td></tr><tr><th>id</th><td><ul><li>355</li><li>1258</li><li>500</li></ul></td></tr><tr><th>passengerAge</th><td><ul><li>20</li><li>10</li><li>30</li></ul></td></tr><tr><th>passengerSurvival</th><td><ul><li>died</li><li>survived</li><li>died</li></ul></td></tr><tr><th>passengerSex</th><td><ul><li>male</li><li>female</li><li>male</li></ul></td></tr></table>
+<table border="1"><tr><th>id</th><td><ul><li>614</li><li>922</li><li>510</li></ul></td></tr><tr><th>passengerAge</th><td><ul><li>30</li><li>-1</li><li>40</li></ul></td></tr><tr><th>passengerClass</th><td><ul><li>3rd</li><li>3rd</li><li>2nd</li></ul></td></tr><tr><th>passengerSex</th><td><ul><li>male</li><li>male</li><li>male</li></ul></td></tr><tr><th>passengerSurvival</th><td><ul><li>survived</li><li>died</li><li>died</li></ul></td></tr></table>
 
 
 ### From JSON strings
@@ -101,7 +125,7 @@ END
 
 json-to-html($json1);
 ```
-<table border="1"><tr><th>sample</th><td><table border="1"><thead><tr><th>name</th><th>lang</th><th>desc</th></tr></thead><tbody><tr><td>json2html</td><td>python</td><td>coverts json 2 html table format</td></tr><tr><td>testing</td><td>python</td><td>clubbing same keys of array of objects</td></tr></tbody></table></td></tr></table>
+<table border="1"><tr><th>sample</th><td><table border="1"><thead><tr><th>desc</th><th>lang</th><th>name</th></tr></thead><tbody><tr><td>coverts json 2 html table format</td><td>python</td><td>json2html</td></tr><tr><td>clubbing same keys of array of objects</td><td>python</td><td>testing</td></tr></tbody></table></td></tr></table>
 
 
 ### Cross-tabulated data
@@ -111,7 +135,7 @@ Here is a more involved data example:
 ```perl6, results=asis
 json-to-html(cross-tabulate(get-titanic-dataset, 'passengerSex', 'passengerSurvival'))
 ```
-<table border="1"><tr><th>female</th><td><table border="1"><tr><th>survived</th><td>339</td></tr><tr><th>died</th><td>127</td></tr></table></td></tr><tr><th>male</th><td><table border="1"><tr><th>survived</th><td>161</td></tr><tr><th>died</th><td>682</td></tr></table></td></tr></table>
+<table border="1"><tr><th>female</th><td><table border="1"><tr><th>died</th><td>127</td></tr><tr><th>survived</th><td>339</td></tr></table></td></tr><tr><th>male</th><td><table border="1"><tr><th>died</th><td>682</td></tr><tr><th>survived</th><td>161</td></tr></table></td></tr></table>
 
 
 Compare the HTML table above with the following plain text table:
@@ -137,13 +161,12 @@ Here is the R code version of the Titanic data sample:
 $tbl ==> json-to-r(field-names => <id passengerClass passengerSex passengerAge passengerSurvival>)
 ```
 ```r
-data.frame(`id` = c("355", "1258", "500"),
-`passengerClass` = c("2nd", "3rd", "2nd"),
-`passengerSex` = c("male", "female", "male"),
-`passengerAge` = c("20", "10", "30"),
-`passengerSurvival` = c("died", "survived", "died"))
+data.frame(`id` = c("614", "922", "510"),
+`passengerClass` = c("3rd", "3rd", "2nd"),
+`passengerSex` = c("male", "male", "male"),
+`passengerAge` = c("30", "-1", "40"),
+`passengerSurvival` = c("survived", "died", "died"))
 ```
-
 
 Here is the R code version of the contingency table:
 
@@ -151,8 +174,28 @@ Here is the R code version of the contingency table:
 json-to-r(cross-tabulate(get-titanic-dataset, 'passengerSex', 'passengerSurvival'))
 ```
 ```r
-list("male"=list("survived"=161, "died"=682), "female"=list("died"=127, "survived"=339))
+list("male"=list("survived"=161, "died"=682), "female"=list("survived"=339, "died"=127))
 ```
+
+### Nicer datasets
+
+In order to obtain datasets or more regular datasets the function `to-dataset` can be used.
+Here a rugged dataset is made regular and converted to an HTML table:
+
+```perl6, results=asis
+my @tbl2 = get-titanic-dataset.pick(6);
+@tbl2 = @tbl2.map({ $_.pick((1..5).pick).Hash });
+@tbl2 ==> to-dataset(missing-value=>'・') ==> json-to-html
+```
+<table border="1"><thead><tr><th>id</th><th>passengerSurvival</th><th>passengerSex</th><th>passengerAge</th><th>passengerClass</th></tr></thead><tbody><tr><td>794</td><td>died</td><td>male</td><td>・</td><td>3rd</td></tr><tr><td>173</td><td>died</td><td>male</td><td>50</td><td>1st</td></tr><tr><td>・</td><td>・</td><td>male</td><td>20</td><td>2nd</td></tr><tr><td>・</td><td>died</td><td>・</td><td>30</td><td>・</td></tr><tr><td>・</td><td>・</td><td>・</td><td>・</td><td>2nd</td></tr><tr><td>956</td><td>・</td><td>female</td><td>・</td><td>・</td></tr></tbody></table>
+
+
+Here a hash is transformed into dataset with columns `<Key Value>` and then converted into an HTML table:
+
+```perl6, results=asis
+{ 4 => 'a', 5 => 'b', 8 => 'c'} ==> to-dataset() ==> json-to-html
+```
+<table border="1"><thead><tr><th>Value</th><th>Key</th></tr></thead><tbody><tr><td>a</td><td>4</td></tr><tr><td>c</td><td>8</td></tr><tr><td>b</td><td>5</td></tr></tbody></table>
 
 
 ------
@@ -168,19 +211,9 @@ list("male"=list("survived"=161, "died"=682), "female"=list("died"=127, "survive
   - For example, I hoped that someone has already solved that problem for Raku.
 - Since I did not find Raku packages for the translation I wanted, I looked for solutions into the Python ecosystem.
   - ... And found ["json2html"](https://github.com/softvar/json2html).
-- Using ChatGPT-4.0 I translated the only class of that package from Python in Raku.
+- Using ChatGPT-4.0 I translated the only class of that package from Python into Raku.
 - The obtained translation could be executed with relatively minor changes.
   - I further refactored and enhanced the HTML translator to fit my most frequent Raku workflows.
-
-It is envisioned this package to have translators to multiple formats. For example:
-- [X] DONE HTML
-- [X] DONE R
-- [ ] TODO Plain text
-- [ ] TODO Python
-- [ ] TODO Mermaid-JS
-- [ ] TODO Julia
-- [ ] TODO WL
-- [ ] TODO SQL
 
 ------
 
@@ -216,6 +249,20 @@ It is envisioned this package to have translators to multiple formats. For examp
 (2023), 
 [GitHub/antononcube](https://github.com/antononcube).
 
+[AAp4] Anton Antonov,
+[Text::CodeProcessing Raku package](https://github.com/antononcube/Raku-Text-CodeProcessing),
+(2021-2023),
+[GitHub/antononcube](https://github.com/antononcube).
+
+[AAp5] Anton Antonov,
+[Mathematica::Serializer Raku package](https://github.com/antononcube/Raku-Mathematica-Serializer),
+(2021-2022),
+[GitHub/antononcube](https://github.com/antononcube).
+
+[BDp1] Brian Duggan,
+[Jupyter:Kernel Raku package](https://github.com/bduggan/raku-jupyter-kernel),
+(2017-2023),
+[GitHub/bduggan](https://github.com/bduggan).
 
 [VMp1] Varun Malhotra,
 [json2html Python package](https://github.com/softvar/json2html),
