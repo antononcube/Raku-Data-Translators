@@ -7,8 +7,8 @@ class JSON::Translators::HTML {
     has $!table-init-markup;
     has Str $.table-attributes = 'border="1"';
     has Bool $.clubbing = True;
-    has Bool $.escape = True;
-    has Bool $.encode = False;
+    has Bool $.escape is rw = True;
+    has Bool $.encode is rw = False;
     has $.field-names = Whatever;
 
     submethod TWEAK {
