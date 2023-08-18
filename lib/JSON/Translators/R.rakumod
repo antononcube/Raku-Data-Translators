@@ -36,7 +36,7 @@ class JSON::Translators::R
                     %colVals{$cn}.push(self.convert-json-node(%entry{$cn}));
                 }
             }
-            $converted-output ~= %colVals.map({ "`{$_.key}` = c({$_.value.join(', ')})" }).join(",\n");
+            $converted-output ~= @column-headers.map({ "`{$_}` = c({%colVals{$_}.join(', ')})" }).join(",\n");
             $converted-output ~= ')';
             return $converted-output;
         }
