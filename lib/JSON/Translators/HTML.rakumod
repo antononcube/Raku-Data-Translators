@@ -71,8 +71,8 @@ class JSON::Translators::HTML {
     }
 
     method convert-list(@list-input) {
-        return "" unless @list-input;
-        my $converted-output = "";
+        return '' unless @list-input;
+        my $converted-output = '';
         my @column-headers = Empty;
         @column-headers = self.column-headers-from-list-of-maps(@list-input) if $!clubbing;
         if @column-headers {
