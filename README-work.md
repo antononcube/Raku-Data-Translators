@@ -1,10 +1,34 @@
 # JSON::Translators 
 
 Raku package for translation of JSON specs or JSON-like data structures into other formats.
+(HTML, R, WL.)
+
+
+------
+
+## Installation
+
+Package installations from both sources use [zef installer](https://github.com/ugexe/zef)
+(which should be bundled with the "standard" Rakudo installation file.)
+
+To install the package from [Zef ecosystem](https://raku.land/) use the shell command:
+
+```
+zef install JSON::Translators
+```
+
+To install the package from the GitHub repository use the shell command:
+
+```
+zef install https://github.com/antononcube/Raku-JSON-Translators.git
+```
+
+
+------
 
 ## Basic usage
 
-## Main use case
+### Main use case
 
 Here is a "main use case" example:
 1. Get a dataset that is an array of hashes
@@ -80,6 +104,23 @@ Compare the HTML table above with the following plain text table:
 to-pretty-table(cross-tabulate(get-titanic-dataset, 'passengerSex', 'passengerSurvival'))
 ```
 
+### Generation of R code
+
+
+Here is the R code version of the Titanic data sample:
+
+```perl6, output.lang=r, output.prompt=NONE
+$tbl ==> json-to-r(field-names => <id passengerClass passengerSex passengerAge passengerSurvival>)
+```
+
+
+Here is the R code version of the contingency table:
+
+```perl6, output.lang=r, output.prompt=NONE
+json-to-r(cross-tabulate(get-titanic-dataset, 'passengerSex', 'passengerSurvival'))
+```
+
+
 ------
 
 ## Implementation notes
@@ -99,10 +140,10 @@ to-pretty-table(cross-tabulate(get-titanic-dataset, 'passengerSex', 'passengerSu
 
 It is envisioned this package to have translators to multiple formats. For example:
 - [X] DONE HTML
+- [X] DONE R
 - [ ] TODO Plain text
 - [ ] TODO Python
 - [ ] TODO Mermaid-JS
-- [ ] TODO R
 - [ ] TODO Julia
 - [ ] TODO WL
 - [ ] TODO SQL
