@@ -1,0 +1,56 @@
+use v6.d;
+
+use lib '.';
+use lib './lib';
+
+use JSON::Translators;
+use JSON::Fast;
+use Test;
+
+#===========================================================
+## 1
+#===========================================================
+my $json1 = q:to/END/;
+{
+	"name": "Json2Html",
+	"desription": "converts json 2 html table format"
+}
+END
+
+my $res1 = q:to/END/;
+list("name"="Json2Html", "desription"="converts json 2 html table format")
+END
+
+is
+        json-to-r($json1, field-names => <name desription>).subst(/\s/, ''):g,
+        $res1.subst(/\s/, ''):g,
+        'basic';
+
+is
+        json-to-r(from-json($json1), field-names => <name desription>),
+        json-to-r($json1, field-names => <name desription>),
+        'basic eqv';
+
+#===========================================================
+## 2
+#===========================================================
+my $ds2 = (${:id("304"), :passengerAge("60"), :passengerClass("1st"), :passengerSex("male"), :passengerSurvival("died")},
+           ${:id("594"), :passengerAge("30"), :passengerClass("2nd"), :passengerSex("female"), :passengerSurvival("survived")},
+           ${:id("1163"), :passengerAge("-1"), :passengerClass("3rd"), :passengerSex("male"), :passengerSurvival("survived")},
+           ${:id("1038"), :passengerAge("-1"), :passengerClass("3rd"), :passengerSex("female"), :passengerSurvival("survived")});
+
+my $res2 = q:to/END/;
+data.frame(`id` = c("304", "594", "1163", "1038"),
+`passengerClass` = c("1st", "2nd", "3rd", "3rd"),
+`passengerSex` = c("male", "female", "male", "female"),
+`passengerAge` = c("60", "30", "-1", "-1"),
+`passengerSurvival` = c("died", "survived", "survived", "survived"))
+END
+
+is
+        json-to-r($ds2, field-names => <id passengerClass passengerSex passengerAge passengerSurvival>),
+        $res2.trim,
+        'dataset';
+
+
+done-testing;
