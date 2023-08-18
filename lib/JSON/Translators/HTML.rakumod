@@ -96,7 +96,7 @@ class JSON::Translators::HTML {
     }
 
     method convert-object(%json-input) {
-        return "" unless %json-input;
+        return '' unless %json-input;
         my $converted-output = $!table-init-markup ~ '<tr>';
         my @res;
         my @pairs =
@@ -109,7 +109,7 @@ class JSON::Translators::HTML {
         for @pairs -> $p {
             @res.push("<th>{ self.convert-json-node($p.key) }</th><td>{ self.convert-json-node($p.value) }</td>");
         }
-        $converted-output ~= @res.join('</tr><tr>') ~ "</tr></table>";
+        $converted-output ~= @res.join('</tr><tr>') ~ '</tr></table>';
         return $converted-output;
     }
 }
