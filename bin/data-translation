@@ -1,0 +1,19 @@
+#!/usr/bin/env raku
+use v6.d;
+
+use Data::Translators;
+use JSON::Fast;
+
+#| Convert data into another format.
+multi sub MAIN(
+        Str $data, #= Data to convert.
+        Str :t($target) = 'html', #= Target to convert to, one of <JSON HTML R>.
+        Bool :$encode = False, #= Whether to encode or not.
+        Bool :$escape = False, #= Whether to escape or not.
+        Str :$field-names = '', #= Field names to use for Map objects, separated with ';'.
+               ) {
+
+    my $fieldNames = $field-names ?? $field-names.split(';') !!  Whatever;
+
+    say data-translation($data, :$target, :$encode, :$escape, field-names => $fieldNames);
+}
