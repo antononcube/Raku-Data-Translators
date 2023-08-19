@@ -5,8 +5,54 @@ use Data::Translators::R;
 use Data::TypeSystem;
 use Data::TypeSystem::Predicates;
 use Hash::Merge;
+use JSON::Fast;
 
 unit module Data::Translators;
+
+#===========================================================
+# Data translation
+#===========================================================
+
+#| Translates data into different formats.
+#| C<$data> -- Data to convert.
+#| C<$target> -- Target to convert to, one of <HTML R>.
+#| C<$field-names> -- Field names to use for Map objects.
+#| C<$table-attributes> -- HTML table attributes to use.
+#| C<$encode> -- Whether to encode or not.
+#| C<$escape> -- Whether to escape or not.
+proto sub data-translation($data, Str :$target = 'HTML', *%args) is export {*}
+
+multi sub data-translation(Str $data where *.IO.f, Str :$target = 'HTML', *%args) {
+    return data-translation(slurp($data), :$target, |%args);
+}
+
+multi sub data-translation(IO $data, Str :$target = 'HTML', *%args) {
+    return data-translation(slurp($data), :$target, |%args);
+}
+
+multi sub data-translation($data, Str :$target = 'HTML', *%args) {
+
+    my $trObj = do given $target {
+        when $_.lc ∈ <html markdown> {
+            Data::Translators::HTML.new(|%args);
+        }
+
+        when $_.lc ∈ <r rlang> {
+            Data::Translators::R.new(|%args);
+        }
+
+        when $_.lc eq 'json' {
+            return to-json($data);
+        }
+
+        default {
+            note "Do not know how to process the target argument: $_.";
+            return Nil;
+        }
+    }
+
+    return $trObj.convert($data);
+}
 
 #===========================================================
 # JSON to HTML
