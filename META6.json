@@ -19,7 +19,9 @@
     "Data::Translators::HTML": "lib/Data/Translators/HTML.rakumod",
     "Data::Translators::R": "lib/Data/Translators/R.rakumod"
   },
-  "resources": [],
+  "resources": [
+    "professionals.json"
+  ],
   "license": "Artistic-2.0",
   "api": "1",
   "source-url": "https://github.com/antononcube/Raku-Data-Translators.git",
