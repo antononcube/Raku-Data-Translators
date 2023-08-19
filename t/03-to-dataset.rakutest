@@ -9,19 +9,25 @@ use Test;
 
 plan *;
 
+#===========================================================
 ## 1
+#===========================================================
 my $data1 = [ 4 => 'a', 5 => 'b', 8 => 'c'];
 is-deeply
         to-dataset($data1),
         $data1.map({ Hash.new( <Key Value> Z=> $_.kv ) }).Array;
 
+#===========================================================
 ## 2
+#===========================================================
 my $data2 = { 4 => 'a', 5 => 'b', 8 => 'c'};
 is-deeply
         to-dataset($data2),
         $data2.map({ Hash.new( <Key Value> Z=> $_.kv ) }).Array;
 
+#===========================================================
 ## 3
+#===========================================================
 my $data3 = (${:id("304"), :passengerAge("60"), :passengerClass("1st"), :passengerSex("male"), :passengerSurvival("died")},
              ${:id("594"), :passengerAge("30"), :passengerClass("2nd"), :passengerSex("female"), :passengerSurvival("survived")},
              ${:id("1163"), :passengerAge("-1"), :passengerClass("3rd"), :passengerSex("male"), :passengerSurvival("survived")},
@@ -31,7 +37,9 @@ is-deeply
         to-dataset($data3),
         $data3;
 
+#===========================================================
 ## 4
+#===========================================================
 my $data4 = (${:id("304"), :passengerAge("60"), :passengerClass("1st"), :passengerSex("male"), :passengerSurvival("died")},
              ${:id("594"), :passengerClass("2nd"), :passengerSex("female"), :passengerSurvival("survived")},
              ${:id("1163"), :passengerAge("-1"),  :passengerSex("male"), :passengerSurvival("survived")},
