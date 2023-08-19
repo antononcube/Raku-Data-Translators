@@ -51,7 +51,6 @@ class Data::Translators::HTML {
                 @column-headers = $!field-names.grep({ $_ ∈ @column-headers }).Array;
                 if !@column-headers {
                     note "An empty set of field names is obtained after filtering.";
-                    @column-headers = $json-input[0].keys;
                 }
             }
             return @column-headers;
