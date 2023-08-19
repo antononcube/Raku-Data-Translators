@@ -15,7 +15,6 @@ multi sub MAIN(
         Str :$field-names = '',   #= Field names to use for Map objects, separated with ';'.
                ) {
 
-    my $fieldNames = $field-names ?? $field-names.split(';') !!  Whatever;
-
-    say data-translation($data, :$target, :$encode, :$escape, field-names => $fieldNames);
+    my @fieldNames = $field-names ?? $field-names.split(';') !! [];
+    say data-translation($data, :$target, :$encode, :$escape, field-names => @fieldNames);
 }
