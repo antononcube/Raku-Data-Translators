@@ -16,6 +16,9 @@ class Data::Translators::HTML {
         if $!field-names ~~ Str:D {
             $!field-names = [$!field-names,];
         }
+        if $!field-names ~~ Positional && !$!field-names {
+            $!field-names = Whatever
+        }
     }
 
     method convert($json = "") {
