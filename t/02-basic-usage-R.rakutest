@@ -52,5 +52,50 @@ is
         $res2.trim,
         'dataset';
 
+#===========================================================
+## 3
+#===========================================================
+my $data3 = q:to/END/;
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "Alice",
+      "age": 25,
+      "profession": "Engineer"
+    },
+    {
+      "id": 2,
+      "name": "Bob",
+      "age": 30,
+      "profession": "Doctor"
+    },
+    {
+      "id": 3,
+      "name": "Charlie",
+      "age": 28,
+      "profession": "Artist"
+    },
+    {
+      "id": 4,
+      "name": "Diana",
+      "age": 32,
+      "profession": "Teacher"
+    }
+  ]
+}
+END
+
+my $res3 = q:to/END/;
+list("data"=data.frame(`name` = c("Alice", "Bob", "Charlie", "Diana"),
+`id` = c(1, 2, 3, 4),
+`age` = c(25, 30, 28, 32),
+`profession` = c("Engineer", "Doctor", "Artist", "Teacher")))
+END
+
+is
+        json-to-r($data3, field-names => <data name id age profession>).subst(/\s/,''):g,
+        $res3.subst(/\s/,''):g,
+        'professionals';
 
 done-testing;
