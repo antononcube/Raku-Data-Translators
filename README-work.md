@@ -28,6 +28,9 @@ The package "Data::TypeSystem", [AAp2], is used for "translation decisions" and 
 The package "Mathematica::Serializer", [AAp5], has very similar mission --
 it is for translating Raku data structures into Mathematica (aka Wolfram Language or WL) code.
 
+**Remark:** The provided converters are made for communication purposes, so they might not be
+very performant. I have used or tested them with datasets that have less than 5000 rows.  
+
 ------
 
 ## Installation
