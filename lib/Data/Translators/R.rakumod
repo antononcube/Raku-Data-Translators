@@ -51,7 +51,7 @@ class Data::Translators::R
         my @res;
         my @pairs =
                 do if self.field-names ~~ Positional {
-                    self.field-names.map({ $_ => %json-input{$_} })
+                    self.field-names.map({ %json-input{$_}:exists ?? ($_ => %json-input{$_}) !! Empty })
                 } else {
                     %json-input.pairs
                 };

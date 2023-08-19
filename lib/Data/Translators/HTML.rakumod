@@ -50,7 +50,8 @@ class Data::Translators::HTML {
             if $!field-names ~~ Positional && $!field-names.all ~~ Str:D {
                 @column-headers = $!field-names.grep({ $_ ∈ @column-headers }).Array;
                 if !@column-headers {
-                    note "The empty set of field names is obtained after filtering";
+                    note "An empty set of field names is obtained after filtering.";
+                    @column-headers = $json-input[0].keys;
                 }
             }
             return @column-headers;
@@ -99,7 +100,7 @@ class Data::Translators::HTML {
         my @res;
         my @pairs =
                 do if $!field-names ~~ Positional {
-                    $!field-names.map({ $_ => %json-input{$_} })
+                    $!field-names.map({ %json-input{$_}:exists ?? ($_ => %json-input{$_}) !! Empty })
                 } else {
                     %json-input.pairs
                 };
