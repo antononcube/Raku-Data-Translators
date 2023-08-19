@@ -5,6 +5,7 @@ Raku package for translation of JSON specs or JSON-like data structures into oth
 It is envisioned this package to have translators to multiple formats. For example:
 - [X] DONE HTML
 - [X] DONE R
+- [X] DONE JSON
 - [ ] TODO Plain text
 - [ ] TODO Python
 - [ ] TODO Mermaid-JS
@@ -76,7 +77,7 @@ use Data::Translators;
 my $tbl = get-titanic-dataset.pick(3);
 ```
 ```
-# ({id => 1219, passengerAge => 30, passengerClass => 3rd, passengerSex => male, passengerSurvival => died} {id => 20, passengerAge => 40, passengerClass => 1st, passengerSex => male, passengerSurvival => died} {id => 763, passengerAge => 0, passengerClass => 3rd, passengerSex => male, passengerSurvival => survived})
+# ({id => 85, passengerAge => 40, passengerClass => 1st, passengerSex => male, passengerSurvival => died} {id => 1185, passengerAge => -1, passengerClass => 3rd, passengerSex => male, passengerSurvival => died} {id => 503, passengerAge => 40, passengerClass => 2nd, passengerSex => female, passengerSurvival => survived})
 ```
 
 Here is the corresponding dataset type:
@@ -91,25 +92,25 @@ deduce-type($tbl);
 Here is the corresponding HTML table:
 
 ```perl6, results=asis
-$tbl ==> json-to-html
+$tbl ==> data-translation
 ```
-<table border="1"><thead><tr><th>passengerSurvival</th><th>passengerAge</th><th>id</th><th>passengerSex</th><th>passengerClass</th></tr></thead><tbody><tr><td>died</td><td>30</td><td>1219</td><td>male</td><td>3rd</td></tr><tr><td>died</td><td>40</td><td>20</td><td>male</td><td>1st</td></tr><tr><td>survived</td><td>0</td><td>763</td><td>male</td><td>3rd</td></tr></tbody></table>
+<table border="1"><thead><tr><th>passengerSex</th><th>id</th><th>passengerSurvival</th><th>passengerAge</th><th>passengerClass</th></tr></thead><tbody><tr><td>male</td><td>85</td><td>died</td><td>40</td><td>1st</td></tr><tr><td>male</td><td>1185</td><td>died</td><td>-1</td><td>3rd</td></tr><tr><td>female</td><td>503</td><td>survived</td><td>40</td><td>2nd</td></tr></tbody></table>
 
 
 We can specify field names and HTML table attributes:
 
 ```perl6, results=asis
-$tbl ==> json-to-html(field-names => <id passengerSurvival>, table-attributes => 'id="info-table" class="table table-bordered table-hover" text-align="center"');
+$tbl ==> data-translation(field-names => <id passengerSurvival>, table-attributes => 'id="info-table" class="table table-bordered table-hover" text-align="center"');
 ```
-<table id="info-table" class="table table-bordered table-hover" text-align="center"><thead><tr><th>id</th><th>passengerSurvival</th></tr></thead><tbody><tr><td>1219</td><td>died</td></tr><tr><td>20</td><td>died</td></tr><tr><td>763</td><td>survived</td></tr></tbody></table>
+<table id="info-table" class="table table-bordered table-hover" text-align="center"><thead><tr><th>id</th><th>passengerSurvival</th></tr></thead><tbody><tr><td>85</td><td>died</td></tr><tr><td>1185</td><td>died</td></tr><tr><td>503</td><td>survived</td></tr></tbody></table>
 
 
 Here is how the transposed dataset is tabulated:
 
 ```perl6, results=asis
-$tbl ==> transpose() ==> json-to-html;
+$tbl ==> transpose() ==> data-translation;
 ```
-<table border="1"><tr><th>id</th><td><ul><li>1219</li><li>20</li><li>763</li></ul></td></tr><tr><th>passengerAge</th><td><ul><li>30</li><li>40</li><li>0</li></ul></td></tr><tr><th>passengerSex</th><td><ul><li>male</li><li>male</li><li>male</li></ul></td></tr><tr><th>passengerClass</th><td><ul><li>3rd</li><li>1st</li><li>3rd</li></ul></td></tr><tr><th>passengerSurvival</th><td><ul><li>died</li><li>died</li><li>survived</li></ul></td></tr></table>
+<table border="1"><tr><th>passengerSurvival</th><td><ul><li>died</li><li>died</li><li>survived</li></ul></td></tr><tr><th>passengerSex</th><td><ul><li>male</li><li>male</li><li>female</li></ul></td></tr><tr><th>id</th><td><ul><li>85</li><li>1185</li><li>503</li></ul></td></tr><tr><th>passengerAge</th><td><ul><li>40</li><li>-1</li><li>40</li></ul></td></tr><tr><th>passengerClass</th><td><ul><li>1st</li><li>3rd</li><li>2nd</li></ul></td></tr></table>
 
 
 ### From JSON strings
@@ -126,9 +127,9 @@ my $json1 = q:to/END/;
 }
 END
 
-json-to-html($json1);
+data-translation($json1);
 ```
-<table border="1"><tr><th>sample</th><td><table border="1"><thead><tr><th>name</th><th>lang</th><th>desc</th></tr></thead><tbody><tr><td>json2html</td><td>python</td><td>coverts json 2 html table format</td></tr><tr><td>testing</td><td>python</td><td>clubbing same keys of array of objects</td></tr></tbody></table></td></tr></table>
+<table border="1"><tr><th>sample</th><td><table border="1"><thead><tr><th>desc</th><th>name</th><th>lang</th></tr></thead><tbody><tr><td>coverts json 2 html table format</td><td>json2html</td><td>python</td></tr><tr><td>clubbing same keys of array of objects</td><td>testing</td><td>python</td></tr></tbody></table></td></tr></table>
 
 
 ### Cross-tabulated data
@@ -136,9 +137,9 @@ json-to-html($json1);
 Here is a more involved data example:
 
 ```perl6, results=asis
-json-to-html(cross-tabulate(get-titanic-dataset, 'passengerSex', 'passengerSurvival'))
+data-translation(cross-tabulate(get-titanic-dataset, 'passengerSex', 'passengerSurvival'))
 ```
-<table border="1"><tr><th>male</th><td><table border="1"><tr><th>died</th><td>682</td></tr><tr><th>survived</th><td>161</td></tr></table></td></tr><tr><th>female</th><td><table border="1"><tr><th>died</th><td>127</td></tr><tr><th>survived</th><td>339</td></tr></table></td></tr></table>
+<table border="1"><tr><th>male</th><td><table border="1"><tr><th>survived</th><td>161</td></tr><tr><th>died</th><td>682</td></tr></table></td></tr><tr><th>female</th><td><table border="1"><tr><th>survived</th><td>339</td></tr><tr><th>died</th><td>127</td></tr></table></td></tr></table>
 
 
 Compare the HTML table above with the following plain text table:
@@ -147,12 +148,12 @@ Compare the HTML table above with the following plain text table:
 to-pretty-table(cross-tabulate(get-titanic-dataset, 'passengerSex', 'passengerSurvival'))
 ```
 ```
-# +--------+----------+------+
-# |        | survived | died |
-# +--------+----------+------+
-# | female |   339    | 127  |
-# | male   |   161    | 682  |
-# +--------+----------+------+
+# +--------+------+----------+
+# |        | died | survived |
+# +--------+------+----------+
+# | female | 127  |   339    |
+# | male   | 682  |   161    |
+# +--------+------+----------+
 ```
 
 ### Generation of R code
@@ -161,23 +162,24 @@ to-pretty-table(cross-tabulate(get-titanic-dataset, 'passengerSex', 'passengerSu
 Here is the R code version of the Titanic data sample:
 
 ```perl6, output.lang=r, output.prompt=NONE
-$tbl ==> json-to-r(field-names => <id passengerClass passengerSex passengerAge passengerSurvival>)
+$tbl ==> data-translation(target => 'R', ield-names => <id passengerClass passengerSex passengerAge passengerSurvival>)
 ```
 ```r
-data.frame(`id` = c("1219", "20", "763"),
-`passengerClass` = c("3rd", "1st", "3rd"),
-`passengerSex` = c("male", "male", "male"),
-`passengerAge` = c("30", "40", "0"),
-`passengerSurvival` = c("died", "died", "survived"))
+data.frame(`passengerSex` = c("male", "male", "female"),
+`id` = c("85", "1185", "503"),
+`passengerSurvival` = c("died", "died", "survived"),
+`passengerAge` = c("40", "-1", "40"),
+`passengerClass` = c("1st", "3rd", "2nd"))
 ```
 
 Here is the R code version of the contingency table:
 
 ```perl6, output.lang=r, output.prompt=NONE
-json-to-r(cross-tabulate(get-titanic-dataset, 'passengerSex', 'passengerSurvival'))
+data-translation(cross-tabulate(get-titanic-dataset, 'passengerSex', 'passengerSurvival'). target => 'R')
 ```
 ```r
-list("male"=list("died"=682, "survived"=161), "female"=list("survived"=339, "died"=127))
+#ERROR: No such method 'target' for invocant of type 'Hash'
+Nil
 ```
 
 ### Nicer datasets
@@ -188,17 +190,17 @@ Here a rugged dataset is made regular and converted to an HTML table:
 ```perl6, results=asis
 my @tbl2 = get-titanic-dataset.pick(6);
 @tbl2 = @tbl2.map({ $_.pick((1..5).pick).Hash });
-@tbl2 ==> to-dataset(missing-value=>'・') ==> json-to-html
+@tbl2 ==> to-dataset(missing-value=>'・') ==> data-translation
 ```
-<table border="1"><thead><tr><th>id</th><th>passengerAge</th><th>passengerSurvival</th><th>passengerClass</th><th>passengerSex</th></tr></thead><tbody><tr><td>・</td><td>40</td><td>・</td><td>1st</td><td>・</td></tr><tr><td>・</td><td>20</td><td>・</td><td>・</td><td>・</td></tr><tr><td>・</td><td>・</td><td>died</td><td>2nd</td><td>male</td></tr><tr><td>・</td><td>・</td><td>died</td><td>・</td><td>・</td></tr><tr><td>147</td><td>・</td><td>・</td><td>・</td><td>・</td></tr><tr><td>938</td><td>・</td><td>・</td><td>・</td><td>female</td></tr></tbody></table>
+<table border="1"><thead><tr><th>passengerSurvival</th><th>passengerClass</th><th>id</th><th>passengerSex</th><th>passengerAge</th></tr></thead><tbody><tr><td>survived</td><td>・</td><td>378</td><td>female</td><td>・</td></tr><tr><td>survived</td><td>・</td><td>・</td><td>・</td><td>・</td></tr><tr><td>died</td><td>3rd</td><td>・</td><td>male</td><td>30</td></tr><tr><td>died</td><td>・</td><td>891</td><td>・</td><td>・</td></tr><tr><td>died</td><td>3rd</td><td>・</td><td>male</td><td>・</td></tr><tr><td>survived</td><td>2nd</td><td>338</td><td>・</td><td>・</td></tr></tbody></table>
 
 
 Here a hash is transformed into dataset with columns `<Key Value>` and then converted into an HTML table:
 
 ```perl6, results=asis
-{ 4 => 'a', 5 => 'b', 8 => 'c'} ==> to-dataset() ==> json-to-html
+{ 4 => 'a', 5 => 'b', 8 => 'c'} ==> to-dataset() ==> data-translation
 ```
-<table border="1"><thead><tr><th>Value</th><th>Key</th></tr></thead><tbody><tr><td>b</td><td>5</td></tr><tr><td>c</td><td>8</td></tr><tr><td>a</td><td>4</td></tr></tbody></table>
+<table border="1"><thead><tr><th>Key</th><th>Value</th></tr></thead><tbody><tr><td>4</td><td>a</td></tr><tr><td>8</td><td>c</td></tr><tr><td>5</td><td>b</td></tr></tbody></table>
 
 
 ------
@@ -217,6 +219,40 @@ Here a hash is transformed into dataset with columns `<Key Value>` and then conv
 - Using ChatGPT-4.0 I translated the only class of that package from Python into Raku.
 - The obtained translation could be executed with relatively minor changes.
   - I further refactored and enhanced the HTML translator to fit my most frequent Raku workflows.
+- The ingestion of JSON strings is done with the package ["JSON::Fast"](https://raku.land/cpan:TIMOTIMO/JSON::Fast).
+  - Hence the conversion *to* JSON "comes for free" using `to-json` from that package.
+- The initial versions of the package did not have the "umbrella" function `data-translation`.
+  - Only the "lower level" functions `json-to-html` and `json-to-r` were provided. (Still available.)
+
+------
+
+## CLI
+
+The package provides a Command Line Interface (CLI) script. Here is its usage message:
+
+
+```shell
+data-translation --help
+```
+```
+# Usage:
+#   data-translation <data> [-t|--target=<Str>] [--encode] [--escape] [--field-names=<Str>] -- Convert data into another format.
+#   
+#     <data>                 Data to convert.
+#     -t|--target=<Str>      Target to convert to, one of <JSON HTML R>. [default: 'HTML']
+#     --encode               Whether to encode or not. [default: False]
+#     --escape               Whether to escape or not. [default: False]
+#     --field-names=<Str>    Field names to use for Map objects, separated with ';'. [default: '']
+```
+
+Here is an example application (to [this file](./resources/professionals.json)):
+
+```shell, results=asis
+data-translation ./resources/professionals.json --field-names='data;id;name;age;profession'
+```
+<table border="1"><tr><th>data</th><td><table border="1"><thead><tr><th>id</th><th>name</th><th>age</th><th>profession</th></tr></thead><tbody><tr><td>1</td><td>Alice</td><td>25</td><td>Engineer</td></tr><tr><td>2</td><td>Bob</td><td>30</td><td>Doctor</td></tr><tr><td>3</td><td>Charlie</td><td>28</td><td>Artist</td></tr><tr><td>4</td><td>Diana</td><td>32</td><td>Teacher</td></tr></tbody></table></td></tr></table>
+
+
 
 ------
 

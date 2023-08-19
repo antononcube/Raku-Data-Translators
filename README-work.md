@@ -5,6 +5,7 @@ Raku package for translation of JSON specs or JSON-like data structures into oth
 It is envisioned this package to have translators to multiple formats. For example:
 - [X] DONE HTML
 - [X] DONE R
+- [X] DONE JSON
 - [ ] TODO Plain text
 - [ ] TODO Python
 - [ ] TODO Mermaid-JS
@@ -85,19 +86,19 @@ deduce-type($tbl);
 Here is the corresponding HTML table:
 
 ```perl6, results=asis
-$tbl ==> json-to-html
+$tbl ==> data-translation
 ```
 
 We can specify field names and HTML table attributes:
 
 ```perl6, results=asis
-$tbl ==> json-to-html(field-names => <id passengerSurvival>, table-attributes => 'id="info-table" class="table table-bordered table-hover" text-align="center"');
+$tbl ==> data-translation(field-names => <id passengerSurvival>, table-attributes => 'id="info-table" class="table table-bordered table-hover" text-align="center"');
 ```
 
 Here is how the transposed dataset is tabulated:
 
 ```perl6, results=asis
-$tbl ==> transpose() ==> json-to-html;
+$tbl ==> transpose() ==> data-translation;
 ```
 
 ### From JSON strings
@@ -114,7 +115,7 @@ my $json1 = q:to/END/;
 }
 END
 
-json-to-html($json1);
+data-translation($json1);
 ```
 
 ### Cross-tabulated data
@@ -122,7 +123,7 @@ json-to-html($json1);
 Here is a more involved data example:
 
 ```perl6, results=asis
-json-to-html(cross-tabulate(get-titanic-dataset, 'passengerSex', 'passengerSurvival'))
+data-translation(cross-tabulate(get-titanic-dataset, 'passengerSex', 'passengerSurvival'))
 ```
 
 Compare the HTML table above with the following plain text table:
@@ -137,13 +138,13 @@ to-pretty-table(cross-tabulate(get-titanic-dataset, 'passengerSex', 'passengerSu
 Here is the R code version of the Titanic data sample:
 
 ```perl6, output.lang=r, output.prompt=NONE
-$tbl ==> json-to-r(field-names => <id passengerClass passengerSex passengerAge passengerSurvival>)
+$tbl ==> data-translation(target => 'R', ield-names => <id passengerClass passengerSex passengerAge passengerSurvival>)
 ```
 
 Here is the R code version of the contingency table:
 
 ```perl6, output.lang=r, output.prompt=NONE
-json-to-r(cross-tabulate(get-titanic-dataset, 'passengerSex', 'passengerSurvival'))
+data-translation(cross-tabulate(get-titanic-dataset, 'passengerSex', 'passengerSurvival'). target => 'R')
 ```
 
 ### Nicer datasets
@@ -154,13 +155,13 @@ Here a rugged dataset is made regular and converted to an HTML table:
 ```perl6, results=asis
 my @tbl2 = get-titanic-dataset.pick(6);
 @tbl2 = @tbl2.map({ $_.pick((1..5).pick).Hash });
-@tbl2 ==> to-dataset(missing-value=>'・') ==> json-to-html
+@tbl2 ==> to-dataset(missing-value=>'・') ==> data-translation
 ```
 
 Here a hash is transformed into dataset with columns `<Key Value>` and then converted into an HTML table:
 
 ```perl6, results=asis
-{ 4 => 'a', 5 => 'b', 8 => 'c'} ==> to-dataset() ==> json-to-html
+{ 4 => 'a', 5 => 'b', 8 => 'c'} ==> to-dataset() ==> data-translation
 ```
 
 ------
@@ -179,6 +180,28 @@ Here a hash is transformed into dataset with columns `<Key Value>` and then conv
 - Using ChatGPT-4.0 I translated the only class of that package from Python into Raku.
 - The obtained translation could be executed with relatively minor changes.
   - I further refactored and enhanced the HTML translator to fit my most frequent Raku workflows.
+- The ingestion of JSON strings is done with the package ["JSON::Fast"](https://raku.land/cpan:TIMOTIMO/JSON::Fast).
+  - Hence the conversion *to* JSON "comes for free" using `to-json` from that package.
+- The initial versions of the package did not have the "umbrella" function `data-translation`.
+  - Only the "lower level" functions `json-to-html` and `json-to-r` were provided. (Still available.)
+
+------
+
+## CLI
+
+The package provides a Command Line Interface (CLI) script. Here is its usage message:
+
+
+```shell
+data-translation --help
+```
+
+Here is an example application (to [this file](./resources/professionals.json)):
+
+```shell, results=asis
+data-translation ./resources/professionals.json --field-names='data;id;name;age;profession'
+```
+
 
 ------
 
