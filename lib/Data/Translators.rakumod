@@ -2,6 +2,7 @@ use v6.d;
 
 use Data::Translators::HTML;
 use Data::Translators::R;
+use Data::Translators::WL;
 use Data::TypeSystem;
 use Data::TypeSystem::Predicates;
 use Hash::Merge;
@@ -39,6 +40,10 @@ multi sub data-translation($data, Str :$target = 'HTML', *%args) {
 
         when $_.lc ∈ <r rlang> {
             Data::Translators::R.new(|%args);
+        }
+
+        when $_.lc ∈ ['wl', 'wolfram language', 'mathematica'] {
+            Data::Translators::WL.new(|%args);
         }
 
         when $_.lc eq 'json' {
