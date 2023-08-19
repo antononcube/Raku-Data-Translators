@@ -17,7 +17,8 @@
   "provides": {
     "Data::Translators": "lib/Data/Translators.rakumod",
     "Data::Translators::HTML": "lib/Data/Translators/HTML.rakumod",
-    "Data::Translators::R": "lib/Data/Translators/R.rakumod"
+    "Data::Translators::R": "lib/Data/Translators/R.rakumod",
+    "Data::Translators::WL": "lib/Data/Translators/WL.rakumod"
   },
   "resources": [
     "professionals.json"
