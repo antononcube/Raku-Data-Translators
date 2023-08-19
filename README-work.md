@@ -4,17 +4,18 @@ Raku package for translation of JSON specs or JSON-like data structures into oth
 
 It is envisioned this package to have translators to multiple formats. For example:
 - [X] DONE HTML
-- [X] DONE R
 - [X] DONE JSON
+- [X] DONE R
+- [X] TODO WL
 - [ ] TODO Plain text
 - [ ] TODO Python
 - [ ] TODO Mermaid-JS
 - [ ] TODO Julia
-- [ ] TODO WL
 - [ ] TODO SQL
 
-The main motivation for making the package is to have convenient way of making tables 
-while doing Literate programming with Raku using:
+The main motivation for making the package is to have convenient way of making tables while doing 
+[Literate programming](https://en.wikipedia.org/wiki/Literate_programming) 
+with Raku using:
 
 - Computational Markdown documents, [AAp4]
 - Jupyter notebooks, [BDp1]
@@ -132,8 +133,7 @@ Compare the HTML table above with the following plain text table:
 to-pretty-table(cross-tabulate(get-titanic-dataset, 'passengerSex', 'passengerSurvival'))
 ```
 
-### Generation of R code
-
+### Generation of R and WL code
 
 Here is the R code version of the Titanic data sample:
 
@@ -144,7 +144,13 @@ $tbl ==> data-translation(target => 'R', ield-names => <id passengerClass passen
 Here is the R code version of the contingency table:
 
 ```perl6, output.lang=r, output.prompt=NONE
-data-translation(cross-tabulate(get-titanic-dataset, 'passengerSex', 'passengerSurvival'). target => 'R')
+data-translation(cross-tabulate(get-titanic-dataset, 'passengerSex', 'passengerSurvival'), target => 'R')
+```
+
+Here is the WL code version of the contingency table:
+
+```perl6, output.lang=r, output.prompt=NONE
+data-translation(cross-tabulate(get-titanic-dataset, 'passengerSex', 'passengerSurvival'), target => 'WL')
 ```
 
 ### Nicer datasets

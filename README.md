@@ -4,17 +4,18 @@ Raku package for translation of JSON specs or JSON-like data structures into oth
 
 It is envisioned this package to have translators to multiple formats. For example:
 - [X] DONE HTML
-- [X] DONE R
 - [X] DONE JSON
+- [X] DONE R
+- [X] TODO WL
 - [ ] TODO Plain text
 - [ ] TODO Python
 - [ ] TODO Mermaid-JS
 - [ ] TODO Julia
-- [ ] TODO WL
 - [ ] TODO SQL
 
-The main motivation for making the package is to have convenient way of making tables 
-while doing Literate programming with Raku using:
+The main motivation for making the package is to have convenient way of making tables while doing 
+[Literate programming](https://en.wikipedia.org/wiki/Literate_programming) 
+with Raku using:
 
 - Computational Markdown documents, [AAp4]
 - Jupyter notebooks, [BDp1]
@@ -77,7 +78,7 @@ use Data::Translators;
 my $tbl = get-titanic-dataset.pick(3);
 ```
 ```
-# ({id => 85, passengerAge => 40, passengerClass => 1st, passengerSex => male, passengerSurvival => died} {id => 1185, passengerAge => -1, passengerClass => 3rd, passengerSex => male, passengerSurvival => died} {id => 503, passengerAge => 40, passengerClass => 2nd, passengerSex => female, passengerSurvival => survived})
+# ({id => 1180, passengerAge => -1, passengerClass => 3rd, passengerSex => male, passengerSurvival => died} {id => 753, passengerAge => 20, passengerClass => 3rd, passengerSex => male, passengerSurvival => died} {id => 532, passengerAge => -1, passengerClass => 2nd, passengerSex => male, passengerSurvival => died})
 ```
 
 Here is the corresponding dataset type:
@@ -94,7 +95,7 @@ Here is the corresponding HTML table:
 ```perl6, results=asis
 $tbl ==> data-translation
 ```
-<table border="1"><thead><tr><th>passengerSex</th><th>id</th><th>passengerSurvival</th><th>passengerAge</th><th>passengerClass</th></tr></thead><tbody><tr><td>male</td><td>85</td><td>died</td><td>40</td><td>1st</td></tr><tr><td>male</td><td>1185</td><td>died</td><td>-1</td><td>3rd</td></tr><tr><td>female</td><td>503</td><td>survived</td><td>40</td><td>2nd</td></tr></tbody></table>
+<table border="1"><thead><tr><th>passengerSurvival</th><th>passengerAge</th><th>passengerSex</th><th>passengerClass</th><th>id</th></tr></thead><tbody><tr><td>died</td><td>-1</td><td>male</td><td>3rd</td><td>1180</td></tr><tr><td>died</td><td>20</td><td>male</td><td>3rd</td><td>753</td></tr><tr><td>died</td><td>-1</td><td>male</td><td>2nd</td><td>532</td></tr></tbody></table>
 
 
 We can specify field names and HTML table attributes:
@@ -102,7 +103,7 @@ We can specify field names and HTML table attributes:
 ```perl6, results=asis
 $tbl ==> data-translation(field-names => <id passengerSurvival>, table-attributes => 'id="info-table" class="table table-bordered table-hover" text-align="center"');
 ```
-<table id="info-table" class="table table-bordered table-hover" text-align="center"><thead><tr><th>id</th><th>passengerSurvival</th></tr></thead><tbody><tr><td>85</td><td>died</td></tr><tr><td>1185</td><td>died</td></tr><tr><td>503</td><td>survived</td></tr></tbody></table>
+<table id="info-table" class="table table-bordered table-hover" text-align="center"><thead><tr><th>id</th><th>passengerSurvival</th></tr></thead><tbody><tr><td>1180</td><td>died</td></tr><tr><td>753</td><td>died</td></tr><tr><td>532</td><td>died</td></tr></tbody></table>
 
 
 Here is how the transposed dataset is tabulated:
@@ -110,7 +111,7 @@ Here is how the transposed dataset is tabulated:
 ```perl6, results=asis
 $tbl ==> transpose() ==> data-translation;
 ```
-<table border="1"><tr><th>passengerSurvival</th><td><ul><li>died</li><li>died</li><li>survived</li></ul></td></tr><tr><th>passengerSex</th><td><ul><li>male</li><li>male</li><li>female</li></ul></td></tr><tr><th>id</th><td><ul><li>85</li><li>1185</li><li>503</li></ul></td></tr><tr><th>passengerAge</th><td><ul><li>40</li><li>-1</li><li>40</li></ul></td></tr><tr><th>passengerClass</th><td><ul><li>1st</li><li>3rd</li><li>2nd</li></ul></td></tr></table>
+<table border="1"><tr><th>passengerSex</th><td><ul><li>male</li><li>male</li><li>male</li></ul></td></tr><tr><th>passengerSurvival</th><td><ul><li>died</li><li>died</li><li>died</li></ul></td></tr><tr><th>passengerAge</th><td><ul><li>-1</li><li>20</li><li>-1</li></ul></td></tr><tr><th>passengerClass</th><td><ul><li>3rd</li><li>3rd</li><li>2nd</li></ul></td></tr><tr><th>id</th><td><ul><li>1180</li><li>753</li><li>532</li></ul></td></tr></table>
 
 
 ### From JSON strings
@@ -139,7 +140,7 @@ Here is a more involved data example:
 ```perl6, results=asis
 data-translation(cross-tabulate(get-titanic-dataset, 'passengerSex', 'passengerSurvival'))
 ```
-<table border="1"><tr><th>male</th><td><table border="1"><tr><th>survived</th><td>161</td></tr><tr><th>died</th><td>682</td></tr></table></td></tr><tr><th>female</th><td><table border="1"><tr><th>survived</th><td>339</td></tr><tr><th>died</th><td>127</td></tr></table></td></tr></table>
+<table border="1"><tr><th>male</th><td><table border="1"><tr><th>died</th><td>682</td></tr><tr><th>survived</th><td>161</td></tr></table></td></tr><tr><th>female</th><td><table border="1"><tr><th>survived</th><td>339</td></tr><tr><th>died</th><td>127</td></tr></table></td></tr></table>
 
 
 Compare the HTML table above with the following plain text table:
@@ -156,8 +157,7 @@ to-pretty-table(cross-tabulate(get-titanic-dataset, 'passengerSex', 'passengerSu
 # +--------+------+----------+
 ```
 
-### Generation of R code
-
+### Generation of R and WL code
 
 Here is the R code version of the Titanic data sample:
 
@@ -165,21 +165,29 @@ Here is the R code version of the Titanic data sample:
 $tbl ==> data-translation(target => 'R', ield-names => <id passengerClass passengerSex passengerAge passengerSurvival>)
 ```
 ```r
-data.frame(`passengerSex` = c("male", "male", "female"),
-`id` = c("85", "1185", "503"),
-`passengerSurvival` = c("died", "died", "survived"),
-`passengerAge` = c("40", "-1", "40"),
-`passengerClass` = c("1st", "3rd", "2nd"))
+data.frame(`passengerSurvival` = c("died", "died", "died"),
+`passengerAge` = c("-1", "20", "-1"),
+`passengerSex` = c("male", "male", "male"),
+`passengerClass` = c("3rd", "3rd", "2nd"),
+`id` = c("1180", "753", "532"))
 ```
 
 Here is the R code version of the contingency table:
 
 ```perl6, output.lang=r, output.prompt=NONE
-data-translation(cross-tabulate(get-titanic-dataset, 'passengerSex', 'passengerSurvival'). target => 'R')
+data-translation(cross-tabulate(get-titanic-dataset, 'passengerSex', 'passengerSurvival'), target => 'R')
 ```
 ```r
-#ERROR: No such method 'target' for invocant of type 'Hash'
-Nil
+list("female"=list("died"=127, "survived"=339), "male"=list("died"=682, "survived"=161))
+```
+
+Here is the WL code version of the contingency table:
+
+```perl6, output.lang=r, output.prompt=NONE
+data-translation(cross-tabulate(get-titanic-dataset, 'passengerSex', 'passengerSurvival'), target => 'WL')
+```
+```r
+Association["male"->Association["survived"->161, "died"->682], "female"->Association["died"->127, "survived"->339]]
 ```
 
 ### Nicer datasets
@@ -192,7 +200,7 @@ my @tbl2 = get-titanic-dataset.pick(6);
 @tbl2 = @tbl2.map({ $_.pick((1..5).pick).Hash });
 @tbl2 ==> to-dataset(missing-value=>'・') ==> data-translation
 ```
-<table border="1"><thead><tr><th>passengerSurvival</th><th>passengerClass</th><th>id</th><th>passengerSex</th><th>passengerAge</th></tr></thead><tbody><tr><td>survived</td><td>・</td><td>378</td><td>female</td><td>・</td></tr><tr><td>survived</td><td>・</td><td>・</td><td>・</td><td>・</td></tr><tr><td>died</td><td>3rd</td><td>・</td><td>male</td><td>30</td></tr><tr><td>died</td><td>・</td><td>891</td><td>・</td><td>・</td></tr><tr><td>died</td><td>3rd</td><td>・</td><td>male</td><td>・</td></tr><tr><td>survived</td><td>2nd</td><td>338</td><td>・</td><td>・</td></tr></tbody></table>
+<table border="1"><thead><tr><th>id</th><th>passengerAge</th><th>passengerClass</th><th>passengerSurvival</th><th>passengerSex</th></tr></thead><tbody><tr><td>・</td><td>・</td><td>2nd</td><td>・</td><td>・</td></tr><tr><td>・</td><td>・</td><td>・</td><td>・</td><td>male</td></tr><tr><td>・</td><td>・</td><td>1st</td><td>・</td><td>・</td></tr><tr><td>308</td><td>20</td><td>1st</td><td>died</td><td>male</td></tr><tr><td>・</td><td>20</td><td>・</td><td>・</td><td>・</td></tr><tr><td>174</td><td>・</td><td>・</td><td>・</td><td>male</td></tr></tbody></table>
 
 
 Here a hash is transformed into dataset with columns `<Key Value>` and then converted into an HTML table:
@@ -200,7 +208,7 @@ Here a hash is transformed into dataset with columns `<Key Value>` and then conv
 ```perl6, results=asis
 { 4 => 'a', 5 => 'b', 8 => 'c'} ==> to-dataset() ==> data-translation
 ```
-<table border="1"><thead><tr><th>Key</th><th>Value</th></tr></thead><tbody><tr><td>4</td><td>a</td></tr><tr><td>8</td><td>c</td></tr><tr><td>5</td><td>b</td></tr></tbody></table>
+<table border="1"><thead><tr><th>Value</th><th>Key</th></tr></thead><tbody><tr><td>a</td><td>4</td></tr><tr><td>c</td><td>8</td></tr><tr><td>b</td><td>5</td></tr></tbody></table>
 
 
 ------
