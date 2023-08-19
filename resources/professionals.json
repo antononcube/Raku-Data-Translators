@@ -1,0 +1,28 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "Alice",
+      "age": 25,
+      "profession": "Engineer"
+    },
+    {
+      "id": 2,
+      "name": "Bob",
+      "age": 30,
+      "profession": "Doctor"
+    },
+    {
+      "id": 3,
+      "name": "Charlie",
+      "age": 28,
+      "profession": "Artist"
+    },
+    {
+      "id": 4,
+      "name": "Diana",
+      "age": 32,
+      "profession": "Teacher"
+    }
+  ]
+}
