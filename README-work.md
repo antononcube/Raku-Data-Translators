@@ -197,7 +197,8 @@ Here a hash is transformed into dataset with columns `<Key Value>` and then conv
 - The ingestion of JSON strings is done with the package ["JSON::Fast"](https://raku.land/cpan:TIMOTIMO/JSON::Fast).
   - Hence the conversion *to* JSON "comes for free" using `to-json` from that package.
 - The initial versions of the package did not have the "umbrella" function `data-translation`.
-  - Only the "lower level" functions `json-to-html` and `json-to-r` were provided. (Still available.)
+  - Only the "lower level" functions `json-to-html` and `json-to-r` were provided. 
+- The "lower level" functions, or shortcuts, can be used: `to-html`, `to-r`, `to-wl`.
 
 ------
 
