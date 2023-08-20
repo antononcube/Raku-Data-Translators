@@ -6,7 +6,7 @@ It is envisioned this package to have translators to multiple formats. For examp
 - [X] DONE HTML
 - [X] DONE JSON
 - [X] DONE R
-- [X] TODO WL
+- [X] DONE WL
 - [ ] TODO Plain text
 - [ ] TODO Python
 - [ ] TODO Mermaid-JS
@@ -30,8 +30,16 @@ The package "Data::TypeSystem", [AAp2], is used for "translation decisions" and 
 The package "Mathematica::Serializer", [AAp5], has very similar mission --
 it is for translating Raku data structures into Mathematica (aka Wolfram Language or WL) code.
 
+In order to utilize "Data::Translators" while doing Literate programming with:
+- Computational Markdown files, then use the code chunk argument `results=asis`.
+- Jupyter notebooks, then use the code cell magic spec `%%html` or `%% > html`.
+
+One can find concrete examples for:
+- Computational Markdown files, in the [raw source code of this README](https://raw.githubusercontent.com/antononcube/Raku-Data-Translators/main/README.md)
+- Jupyter notebooks, in the [magics examples notebook](https://github.com/bduggan/raku-jupyter-kernel/blob/master/eg/magics.ipynb) at [BDp1]
+
 **Remark:** The provided converters are made for communication purposes, so they might not be
-very performant. I have used or tested them with datasets that have less than 5000 rows.  
+very performant. I have used or tested them with datasets that have less than 5000 rows.
 
 ------
 
