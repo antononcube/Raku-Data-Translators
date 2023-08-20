@@ -22,13 +22,13 @@ list("name"="Json2Html", "desription"="converts json 2 html table format")
 END
 
 is
-        json-to-r($json1, field-names => <name desription>).subst(/\s/, ''):g,
+        to-r($json1, field-names => <name desription>).subst(/\s/, ''):g,
         $res1.subst(/\s/, ''):g,
         'basic';
 
 is
-        json-to-r(from-json($json1), field-names => <name desription>),
-        json-to-r($json1, field-names => <name desription>),
+        to-r(from-json($json1), field-names => <name desription>),
+        to-r($json1, field-names => <name desription>),
         'basic eqv';
 
 #===========================================================
@@ -48,7 +48,7 @@ data.frame(`id` = c("304", "594", "1163", "1038"),
 END
 
 is
-        json-to-r($ds2, field-names => <id passengerClass passengerSex passengerAge passengerSurvival>),
+        to-r($ds2, field-names => <id passengerClass passengerSex passengerAge passengerSurvival>),
         $res2.trim,
         'dataset';
 
@@ -94,7 +94,7 @@ list("data"=data.frame(`name` = c("Alice", "Bob", "Charlie", "Diana"),
 END
 
 is
-        json-to-r($data3, field-names => <data name id age profession>).subst(/\s/,''):g,
+        to-r($data3, field-names => <data name id age profession>).subst(/\s/,''):g,
         $res3.subst(/\s/,''):g,
         'professionals';
 
