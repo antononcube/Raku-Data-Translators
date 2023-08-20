@@ -137,6 +137,10 @@ multi sub to-dataset($data, :$missing-value = '') {
             return $_.map({ $_.key => merge-hash(%emptyRow, $_.value) }).Hash;
         }
 
+        when $_ ~~ Seq {
+            return to-dataset($data.Array, :$missing-value);
+        }
+
         when $_ ~~ Hash && ($_.values.all ~~ Str || $_.values.all ~~ Numeric || $_.values.all ~~ DateTime) {
             return $_.map({ Hash.new( <Key Value> Z=> $_.kv ) }).Array;
         }
