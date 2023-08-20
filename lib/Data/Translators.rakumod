@@ -93,6 +93,21 @@ multi sub json-to-r($data, *%args) {
 }
 
 #===========================================================
+# JSON to WL
+#===========================================================
+#| Convert JSON string or JSON-like structure into a WL spec.
+#| C<$data> -- Data to convert.
+#| C<$field-names> -- Field names to use for Map objects.
+proto sub json-to-wl($data, *%args) is export {*}
+
+multi sub json-to-wl($data, *%args) {
+
+    my $jtr = Data::Translators::WL.new(|%args);
+
+    return $jtr.convert($data);
+}
+
+#===========================================================
 # To dataset
 #===========================================================
 #| Convert a data structures to dataset (a Positional of Positionals or Maps.)
