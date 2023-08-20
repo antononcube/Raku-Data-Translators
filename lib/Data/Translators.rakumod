@@ -68,9 +68,9 @@ multi sub data-translation($data, Str :$target = 'HTML', *%args) {
 #| C<$table-attributes> -- HTML table attributes to use.
 #| C<$encode> -- Whether to encode or not.
 #| C<$escape> -- Whether to escape or not.
-proto sub json-to-html($data, *%args) is export {*}
+proto sub to-html($data, *%args) is export {*}
 
-multi sub json-to-html($data, *%args) {
+multi sub to-html($data, *%args) {
 
     my $jtr = Data::Translators::HTML.new(|%args);
 
@@ -83,9 +83,9 @@ multi sub json-to-html($data, *%args) {
 #| Convert JSON string or JSON-like structure into an R spec.
 #| C<$data> -- Data to convert.
 #| C<$field-names> -- Field names to use for Map objects.
-proto sub json-to-r($data, *%args) is export {*}
+proto sub to-r($data, *%args) is export {*}
 
-multi sub json-to-r($data, *%args) {
+multi sub to-r($data, *%args) {
 
     my $jtr = Data::Translators::R.new(|%args);
 
@@ -98,9 +98,9 @@ multi sub json-to-r($data, *%args) {
 #| Convert JSON string or JSON-like structure into a WL spec.
 #| C<$data> -- Data to convert.
 #| C<$field-names> -- Field names to use for Map objects.
-proto sub json-to-wl($data, *%args) is export {*}
+proto sub to-wl($data, *%args) is export {*}
 
-multi sub json-to-wl($data, *%args) {
+multi sub to-wl($data, *%args) {
 
     my $jtr = Data::Translators::WL.new(|%args);
 
