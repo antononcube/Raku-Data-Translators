@@ -16,7 +16,7 @@ class Data::Translators::WL
         if $json-input ~~ Str:D {
             return "\"$json-input\"";
         }
-        return self.Data::Translators::HTML::convert-json-node($json-input);
+        return self.Data::Translators::HTML::convert-json-node($json-input).subst(/ ^ ('(Whatever)' | '(WhateverCode)') $/, {"\"{$0.Str}\""});
     }
 
     method convert-list(@list-input) {
