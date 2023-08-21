@@ -80,7 +80,7 @@ class Data::Translators::HTML {
                 self.convert-list($json-input);
             }
             default {
-                $json-input.Str;
+                $_.Str;
             }
         }
     }
