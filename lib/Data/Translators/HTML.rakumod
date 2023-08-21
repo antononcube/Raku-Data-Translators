@@ -63,14 +63,26 @@ class Data::Translators::HTML {
     }
 
     method convert-json-node($json-input) {
-        if $json-input ~~ Str:D {
-            return $!escape ?? $json-input.trans(['<', '>', '&', '\'', '"'] => ['&lt;', '&gt;', '&amp;', '&#39;', '&quot;']) !! $json-input;
-        } elsif $json-input ~~ Associative:D {
-            return self.convert-object($json-input);
-        } elsif $json-input ~~ Iterable:D {
-            return self.convert-list($json-input);
+        return do given $json-input {
+            when $_.isa(Whatever) {
+                '(Whatever)'
+            }
+            when $_.isa(WhateverCode) {
+                '(WhateverCode)'
+            }
+            when $_ ~~ Str:D {
+                $!escape ?? $json-input.trans(['<', '>', '&', '\'', '"'] => ['&lt;', '&gt;', '&amp;', '&#39;', '&quot;']) !! $json-input;
+            }
+            when $_ ~~ Associative:D {
+                self.convert-object($json-input);
+            }
+            when $_ ~~ Iterable:D {
+                self.convert-list($json-input);
+            }
+            default {
+                $json-input.Str;
+            }
         }
-        return $json-input.Str;
     }
 
     method convert-list(@list-input) {
