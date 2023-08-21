@@ -102,6 +102,6 @@ is
 ## 4
 #===========================================================
 
-note to-r([ Pair.new(Whatever, 'Line1'), 'B' => 'Line2']);
+ok to-r([ Pair.new(Whatever, 'Line1'), 'B' => 'Line2']);
 
 done-testing;
