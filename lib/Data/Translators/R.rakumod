@@ -15,12 +15,8 @@ class Data::Translators::R
     method convert-json-node($json-input) {
         if $json-input ~~ Str:D {
             return "\"$json-input\"";
-        } elsif $json-input ~~ Associative:D {
-            return self.convert-object($json-input);
-        } elsif $json-input ~~ Iterable:D {
-            return self.convert-list($json-input);
         }
-        return $json-input.Str;
+        return self.Data::Translators::HTML::convert-json-node($json-input);
     }
 
     method convert-list(@list-input) {
