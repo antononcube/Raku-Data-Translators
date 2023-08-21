@@ -101,4 +101,10 @@ is
         'professionals';
 
 
+#===========================================================
+## 4
+#===========================================================
+
+ok to-html([Whatever => 'Line1', 'B' => 'Line2'], field-names => <data id profession age name>);
+
 done-testing;
