@@ -1,7 +1,7 @@
 {
   "name": "Data::Translators",
   "description": "Translation of datasets, JSON specs, or JSON-like data structures into other formats.",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "perl": "6.*",
   "authors": [
     "Anton Antonov"
