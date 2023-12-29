@@ -170,7 +170,7 @@ to-pretty-table(cross-tabulate(get-titanic-dataset, 'passengerSex', 'passengerSu
 Here is the R code version of the Titanic data sample:
 
 ```perl6, output.lang=r, output.prompt=NONE
-$tbl ==> data-translation(target => 'R', ield-names => <id passengerClass passengerSex passengerAge passengerSurvival>)
+$tbl ==> data-translation(target => 'R', field-names => <id passengerClass passengerSex passengerAge passengerSurvival>)
 ```
 ```r
 data.frame(`passengerClass` = c("1st", "3rd", "3rd"),
