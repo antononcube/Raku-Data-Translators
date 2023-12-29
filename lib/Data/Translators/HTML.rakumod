@@ -64,6 +64,9 @@ class Data::Translators::HTML {
 
     method convert-json-node($json-input) {
         return do given $json-input {
+            when ! $_.defined {
+                '(Any)'
+            }
             when $_.isa(Whatever) {
                 '(Whatever)'
             }
