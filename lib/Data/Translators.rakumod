@@ -64,17 +64,51 @@ multi sub data-translation($data, Str :$target = 'HTML', *%args) {
 #===========================================================
 #| Convert JSON string or JSON-like structure into an HTML spec.
 #| C<$data> -- Data to convert.
-#| C<$field-names> -- Field names to use for Map objects.
-#| C<$table-attributes> -- HTML table attributes to use.
-#| C<$encode> -- Whether to encode or not.
-#| C<$escape> -- Whether to escape or not.
-proto sub to-html($data, *%args) is export {*}
+#| C<:$field-names> -- Field names to use for Map objects.
+#| C<:$table-attributes> -- HTML table attributes to use.
+#| C<:$encode> -- Whether to encode or not.
+#| C<:$escape> -- Whether to escape or not.
+#| C<:$columns> -- Number of columns for the C<:$multicolumn> adverb.
+#| C<:$multicolumn> -- Should multi-column table be created or not?
+proto sub to-html(|) is export {*}
 
 multi sub to-html($data, *%args) {
 
     my $jtr = Data::Translators::HTML.new(|%args);
 
     return $jtr.convert($data);
+}
+
+#------------------------------------------------------------
+sub transpose(@tbl) {
+    my @tbl2;
+    for ^@tbl.elems -> $i {
+        for ^@tbl[0].elems -> $j {
+            with @tbl[$i][$j] {
+                @tbl2[$j][$i] = @tbl[$i][$j];
+            } else {
+                @tbl2[$j][$i] = Nil;
+            }
+        }
+    }
+
+    return @tbl2;
+}
+
+#------------------------------------------------------------
+multi sub to-html(@data, *%args where %args<multicolumn> // False) {
+
+    my $ncol = %args<columns> // %args<cols> // %args<ncol> // 2;
+    my $nrow = round(@data.elems / $ncol);
+    my @tbl = transpose(@data.rotor($nrow, :partial));
+
+    my $nc = @tbl.head.elems;
+    my @cns = ('X' X~ (1 .. $nc)>>.Str).Array;
+    my $res = @tbl.map({ @cns Z=> $_.Array })>>.Hash.Array;
+
+    my $res2 = to-html($res, field-names => @cns, |%args.grep({ $_.key ∉ <field-names multicolumn> }).Hash);
+
+    return $res2.subst(/ '<thead>' .*? '</thead>' /);
 }
 
 #===========================================================
@@ -121,7 +155,8 @@ multi sub to-dataset($data where $data ~~ Numeric || $data ~~ Str || $data ~~ Da
 
 multi sub to-dataset($data, :$missing-value = '') {
     given $data {
-        when (is-reshapable(Iterable, Map, $_) || is-reshapable(Positional, Iterable, $_)) && has-homogeneous-shape($_) {
+        when (is-reshapable(Iterable, Map, $_) || is-reshapable(Positional, Iterable,
+                $_)) && has-homogeneous-shape($_) {
             return $data;
         }
 
@@ -142,11 +177,11 @@ multi sub to-dataset($data, :$missing-value = '') {
         }
 
         when $_ ~~ Hash && ($_.values.all ~~ Str || $_.values.all ~~ Numeric || $_.values.all ~~ DateTime) {
-            return $_.map({ Hash.new( <Key Value> Z=> $_.kv ) }).Array;
+            return $_.map({ Hash.new(<Key Value> Z=> $_.kv) }).Array;
         }
 
         when $_ ~~ Iterable && $_.all ~~ Pair {
-            return $_.map({ Hash.new( <Key Value> Z=> $_.kv ) }).Array;
+            return $_.map({ Hash.new(<Key Value> Z=> $_.kv) }).Array;
         }
 
         default {
