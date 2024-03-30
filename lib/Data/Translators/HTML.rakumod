@@ -6,6 +6,7 @@ use Data::TypeSystem;
 class Data::Translators::HTML {
     has $!table-init-markup;
     has Str $.table-attributes = 'border="1"';
+    has $.align = Whatever;
     has Bool $.clubbing = True;
     has Bool $.escape is rw = True;
     has Bool $.encode is rw = False;
@@ -43,6 +44,10 @@ class Data::Translators::HTML {
         }
 
         my $converted = self.convert-json-node($json-input);
+
+        if self.align ~~ Str:D {
+            $converted .= subst('<td>', "<td align={self.align}>", :g);
+        }
 
         return $!encode ?? $converted.encode('ascii').trans(['<', '>', '&', '\'', '"'] => ['&lt;', '&gt;', '&amp;', '&#39;', '&quot;']) !! $converted;
     }
