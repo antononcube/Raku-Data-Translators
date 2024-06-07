@@ -21,8 +21,7 @@
     "Data::Translators::WL": "lib/Data/Translators/WL.rakumod"
   },
   "resources": [
-    "professionals.json",
-    "parameter-reference.json"
+    "professionals.json"
   ],
   "license": "Artistic-2.0",
   "api": "1",
