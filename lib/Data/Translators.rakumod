@@ -111,6 +111,35 @@ multi sub to-html(@data, *%args where %args<multicolumn> // False) {
     return $res2.subst(/ '<thead>' .*? '</thead>' /);
 }
 
+#------------------------------------------------------------
+#| Convert a list into an HTML table stencil.
+#| To have table header a list of pairs have to be provided.
+proto sub to-html-table($data, |) is export {*}
+
+multi sub to-html-table(@tbls where @tbls.all ~~ Str:D, Str:D :$align = 'left') {
+
+    my $pre = '<table border="1"><tr>';
+    my $post = '</tr></table>';
+    my $tdStart = '<td style="border: 3px solid black;">';
+    my $res = $pre ~ @tbls.map({ "{$tdStart}{$_}</td>" }) ~ $post;
+
+    return $res;
+}
+
+multi sub to-html-table(@data where @data.all ~~ Pair:D, Str:D :$align = 'left') {
+    my $html = '<table style="border-collapse: collapse; border: 3px solid black;">';
+    $html ~= '<thead><tr>';
+    for @data -> $pair {
+        $html ~= "<th style=\"border: 3px solid black; text-align: {$align};\">{$pair.key}</th>";
+    }
+    $html ~= '</tr></thead><tbody><tr>';
+    for @data -> $pair {
+        $html ~= "<td style=\"border: 3px solid black; text-align: {$align};\">{$pair.value}</td>";
+    }
+    $html ~= '</tr></tbody></table>';
+    return $html;
+}
+
 #===========================================================
 # JSON to R
 #===========================================================
