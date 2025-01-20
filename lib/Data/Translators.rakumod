@@ -96,7 +96,7 @@ sub transpose(@tbl) {
 }
 
 #------------------------------------------------------------
-multi sub to-html(@data, *%args where %args<multicolumn> // False) {
+multi sub to-html(@data, *%args where (%args<multi-column> // %args<multicolumn> // False)) {
 
     my $ncol = %args<columns> // %args<cols> // %args<ncol> // 2;
     my $nrow = round(@data.elems / $ncol);
@@ -106,7 +106,7 @@ multi sub to-html(@data, *%args where %args<multicolumn> // False) {
     my @cns = ('X' X~ (1 .. $nc)>>.Str).Array;
     my $res = @tbl.map({ @cns Z=> $_.Array })>>.Hash.Array;
 
-    my $res2 = to-html($res, field-names => @cns, |%args.grep({ $_.key ∉ <field-names multicolumn> }).Hash);
+    my $res2 = to-html($res, field-names => @cns, |%args.grep({ $_.key ∉ <field-names multicolumn multi-column> }).Hash);
 
     return $res2.subst(/ '<thead>' .*? '</thead>' /);
 }
