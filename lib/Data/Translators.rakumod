@@ -96,9 +96,18 @@ sub transpose(@tbl) {
 }
 
 #------------------------------------------------------------
-multi sub to-html(@data, *%args where (%args<multi-column> // %args<multicolumn> // False)) {
+multi sub to-html(@data,
+                  :multicolumn(:$multi-column)! is copy,
+                  :cols(:ncol(:$columns)) is copy = Whatever,
+                  *%args) {
 
-    my $ncol = %args<columns> // %args<cols> // %args<ncol> // 2;
+    return to-html(@data, |%args) unless so $multi-column;
+
+    if $multi-column.isa(Whatever) {$multi-column = True}
+    if $columns.isa(Whatever) { $columns = 2 }
+
+    my $ncol = $multi-column !~~ Bool:D && $multi-column ~~ Int:D ?? $multi-column !! $columns;
+
     my $nrow = round(@data.elems / $ncol);
     my @tbl = transpose(@data.rotor($nrow, :partial));
 
