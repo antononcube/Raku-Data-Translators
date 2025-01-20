@@ -1,7 +1,6 @@
 use v6.d;
 
-use lib <. lib>;
-
+#use lib <. lib>;
 use Data::Translators;
 use JSON::Fast;
 use Test;
@@ -111,8 +110,9 @@ ok to-html([  Pair.new(Whatever, 'Line1'), 'B' => 'Line2']);
 #===========================================================
 
 subtest {
-        my @data = ('a'..'h' Z 1..8).map({ <x y> Z=> $_ })».Hash;
+        my @data = 1..20;
         ok to-html(@data, :multi-column);
+        ok to-html(@data, :multi-column, :4cols);
         ok to-html(@data, :4multi-column);
 }, "multi-column";
 
