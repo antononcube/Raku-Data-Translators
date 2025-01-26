@@ -152,6 +152,22 @@ multi sub to-html-table(@data where @data.all ~~ Pair:D, Str:D :$align = 'left')
 #===========================================================
 # JSON to R
 #===========================================================
+#| Highlight substrings in a given string that is an HTML table spec.
+proto sub html-table-highlight(Str:D $s, |) is export {*}
+multi sub html-table-highlight(Str:D $s, @highlight, Str:D :$color = 'Orange', :$font-size = Whatever, :$font-weight = 'normal') {
+    return html-table-highlight($s, :@highlight, :$color, :$font-size);
+}
+
+multi sub html-table-highlight(Str:D $s, :h(:@highlight)!, Str:D :c(:$color) = 'Orange', :s(:$font-size) = Whatever, :w(:$font-weight) = 'normal') {
+    my $head = $font-size ~~ Numeric:D ?? "<span style=\"color: $color; font-size:{$font-size}pt; font-weight:$font-weight\">" !! "<span style=\"color: $color; font-weight:$font-weight\">";
+    reduce(
+            { $^a.subst( / <?after '<td>'> $^b <?before '</td>'> /, $head ~ $^b ~ '</span>', :g) },
+            $s, |@highlight) 
+}
+
+#===========================================================
+# JSON to R
+#===========================================================
 #| Convert JSON string or JSON-like structure into an R spec.
 #| C<$data> -- Data to convert.
 #| C<$field-names> -- Field names to use for Map objects.
