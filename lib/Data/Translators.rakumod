@@ -248,7 +248,7 @@ multi sub to-dataset($data, :$missing-value = '') {
 #===========================================================
 # HTML
 #===========================================================
-sub html-table-data-extraction(Str:D $html) is export {
+sub html-table-data-extraction(Str:D $html, Str:D :icp(:$index-column-prefix) = '') is export {
     # Initialize result array
     my @result;
 
@@ -259,6 +259,18 @@ sub html-table-data-extraction(Str:D $html) is export {
 
         # Clean headers by removing extra whitespace
         @headers = @headers.map(*.trim);
+    }
+
+    # If no headers found, use column indexes (Column1, Column2, etc.)
+    unless @headers {
+        # Find the first row to determine the number of columns
+        if $html.match(/:i '<tr>' $<cont>=(.*?) '</tr>' /) {
+            my $first-row = $/<cont>.Str;
+            my @cells = $first-row.match(/:i '<td>' $<cont>=(.*?) '</td>' /):g
+                    ?? $/.map(*.Str).map(*.trim).list
+                    !! [];
+            @headers = (1..@cells.elems).map($index-column-prefix ~ *).list;
+        }
     }
 
     return [] unless @headers; # Return empty array if no headers found
@@ -287,5 +299,5 @@ sub html-table-data-extraction(Str:D $html) is export {
         @result.push(%row-data);
     }
 
-    @result
+    return @result;
 }
