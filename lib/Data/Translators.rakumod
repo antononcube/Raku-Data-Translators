@@ -244,3 +244,48 @@ multi sub to-dataset($data, :$missing-value = '') {
         }
     }
 }
+
+#===========================================================
+# HTML
+#===========================================================
+sub html-table-data-extraction(Str:D $html) is export {
+    # Initialize result array
+    my @result;
+
+    # Extract headers (from <th> tags)
+    my @headers;
+    if $html.match( /:i '<th>' $<header>=(.*?) '</th>' /):g {
+        @headers = $/>>.<header>.map(*.Str);
+
+        # Clean headers by removing extra whitespace
+        @headers = @headers.map(*.trim);
+    }
+
+    return [] unless @headers; # Return empty array if no headers found
+
+    # Extract rows (from <tr> within <tbody> or standalone)
+    my @rows;
+    if $html.match(/:i '<tr>' $<cont>=(.*?) '</tr>' /):g {
+        @rows = $/>>.<cont>.map(*.Str);
+    }
+
+    # Process each row
+    for @rows -> $row {
+        # Extract cells (from <td> tags)
+        my @cells = $row.match(/:i '<td>' $<cont>=(.*?) '</td>' /):g
+                ?? $/>>.<cont>.map(*.Str)
+                !! next;
+
+        # Skip empty rows
+        next unless @cells;
+
+        # Create hash for row
+        my %row-data;
+        for @headers.kv -> $i, $header {
+            %row-data{$header} = @cells[$i] // '';
+        }
+        @result.push(%row-data);
+    }
+
+    @result
+}
