@@ -50,6 +50,11 @@ multi sub data-translation($data, Str :$target = 'HTML', *%args) {
             return to-json($data);
         }
 
+        # Should be optimized, double parsing for now;
+        when $_.lc (elem) <raku perl6 dataset> && (try from-json($data)).defined {
+            return from-json($data, |%args);
+        }
+
         when $_.lc (elem) <raku perl6 dataset> && Data::Translators::HTML.is-html-table($data) {
             return Data::Translators::HTML.table-data-extraction($data, |%args);
         }
