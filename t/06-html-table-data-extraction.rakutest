@@ -1,0 +1,72 @@
+use v6.d;
+
+#use lib <. lib>;
+use Data::Translators;
+use JSON::Fast;
+use Test;
+
+plan *;
+
+#===========================================================
+## 1
+#===========================================================
+
+# Define test HTML inputs
+my $html-with-headers = q:to/END/;
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Age</th>
+        <th>City</th>
+    </tr>
+    <tr>
+        <td>John</td>
+        <td>25</td>
+        <td>New York</td>
+    </tr>
+    <tr>
+        <td>Alice</td>
+        <td>30</td>
+        <td>London</td>
+    </tr>
+</table>
+END
+
+# Define expected outputs
+my @expected-with-headers = (
+{ Name => 'John', Age => '25', City => 'New York' },
+{ Name => 'Alice', Age => '30', City => 'London' }
+);
+
+is-deeply html-table-data-extraction($html-with-headers), @expected-with-headers,
+        'Table with headers extracts correctly';
+
+
+#===========================================================
+## 2
+#===========================================================
+
+my $html-no-headers = q:to/END/;
+<table>
+    <tr>
+        <td>John</td>
+        <td>25</td>
+        <td>New York</td>
+    </tr>
+    <tr>
+        <td>Alice</td>
+        <td>30</td>
+        <td>London</td>
+    </tr>
+</table>
+END
+
+my @expected-no-headers = (
+{ Column1 => 'John', Column2 => '25', Column3 => 'New York' },
+{ Column1 => 'Alice', Column2 => '30', Column3 => 'London' }
+);
+
+is-deeply html-table-data-extraction($html-no-headers, index-column-prefix => 'Column'), @expected-no-headers,
+        'Table without headers uses column indexes correctly';
+
+done-testing;
