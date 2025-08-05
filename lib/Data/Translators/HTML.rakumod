@@ -133,4 +133,71 @@ class Data::Translators::HTML {
         $converted-output ~= @res.join('</tr><tr>') ~ '</tr></table>';
         return $converted-output;
     }
+
+    method is-html-table($input) {
+        return False unless $input ~~ Str:D;
+        # Check for <table> tag and at least one <tr> with <td> or <th>
+        return $input ~~ /:i
+        '<table' \s* '>'
+        .*?
+        # No need for elaborated check.
+        # '<tr' \s* '>' .*? ( '<td' \s* '>' | '<th' \s* '>' ) .*? '</tr>'
+        # .*?
+        '</table>'
+        /;
+    }
+
+    method table-data-extraction(Str:D $html, Str:D :icp(:$index-column-prefix) = '') is export {
+        # Initialize result array
+        my @result;
+
+        # Extract headers (from <th> tags)
+        my @headers;
+        if $html.match( /:i '<th>' $<header>=(.*?) '</th>' /):g {
+            @headers = $/>>.<header>.map(*.Str);
+
+            # Clean headers by removing extra whitespace
+            @headers = @headers.map(*.trim);
+        }
+
+        # If no headers found, use column indexes (Column1, Column2, etc.)
+        unless @headers {
+            # Find the first row to determine the number of columns
+            if $html.match(/:i '<tr>' $<cont>=(.*?) '</tr>' /) {
+                my $first-row = $/<cont>.Str;
+                my @cells = $first-row.match(/:i '<td>' $<cont>=(.*?) '</td>' /):g
+                        ?? $/.map(*.Str).map(*.trim).list
+                        !! [];
+                @headers = (1..@cells.elems).map($index-column-prefix ~ *).list;
+            }
+        }
+
+        return [] unless @headers; # Return empty array if no headers found
+
+        # Extract rows (from <tr> within <tbody> or standalone)
+        my @rows;
+        if $html.match(/:i '<tr>' $<cont>=(.*?) '</tr>' /):g {
+            @rows = $/>>.<cont>.map(*.Str);
+        }
+
+        # Process each row
+        for @rows -> $row {
+            # Extract cells (from <td> tags)
+            my @cells = $row.match(/:i '<td>' $<cont>=(.*?) '</td>' /):g
+                    ?? $/>>.<cont>.map(*.Str)
+                    !! next;
+
+            # Skip empty rows
+            next unless @cells;
+
+            # Create hash for row
+            my %row-data;
+            for @headers.kv -> $i, $header {
+                %row-data{$header} = @cells[$i] // '';
+            }
+            @result.push(%row-data);
+        }
+
+        return @result;
+    }
 }

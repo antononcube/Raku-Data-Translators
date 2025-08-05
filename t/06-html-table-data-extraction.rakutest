@@ -1,7 +1,8 @@
 use v6.d;
 
-#use lib <. lib>;
+use lib <. lib>;
 use Data::Translators;
+use Data::Translators::HTML;
 use JSON::Fast;
 use Test;
 
@@ -38,7 +39,9 @@ my @expected-with-headers = (
 { Name => 'Alice', Age => '30', City => 'London' }
 );
 
-is-deeply html-table-data-extraction($html-with-headers), @expected-with-headers,
+is-deeply
+        Data::Translators::HTML.table-data-extraction($html-with-headers),
+        @expected-with-headers,
         'Table with headers extracts correctly';
 
 
@@ -66,7 +69,19 @@ my @expected-no-headers = (
 { Column1 => 'Alice', Column2 => '30', Column3 => 'London' }
 );
 
-is-deeply html-table-data-extraction($html-no-headers, index-column-prefix => 'Column'), @expected-no-headers,
+is-deeply
+        Data::Translators::HTML.table-data-extraction($html-no-headers, index-column-prefix => 'Column'),
+        @expected-no-headers,
+        'Table without headers uses column indexes correctly';
+
+
+#===========================================================
+## 3
+#===========================================================
+
+is-deeply
+        data-translation($html-no-headers, target => 'dataset', index-column-prefix => 'Column'),
+        @expected-no-headers,
         'Table without headers uses column indexes correctly';
 
 done-testing;
