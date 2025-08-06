@@ -166,9 +166,6 @@ sink my $html = q:to/END/;
 </table>
 END
 ```
-```
-# (Any)
-```
 
 Here is the Raku dataset:
 
@@ -291,7 +288,7 @@ data-translation --help
 ```
 ```
 # Usage:
-#   /Users/antonov/.rakubrew/versions/moar-2025.05/share/perl6/site/bin/data-translation <data> [-t|--target=<Str>] [--encode] [--escape] [--field-names=<Str>] -- Convert data into another format.
+#   data-translation <data> [-t|--target=<Str>] [--encode] [--escape] [--field-names=<Str>] -- Convert data into another format.
 #   
 #     <data>                 Data to convert.
 #     -t|--target=<Str>      Target to convert to, one of <JSON HTML R>. [default: 'HTML']
