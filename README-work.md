@@ -21,13 +21,13 @@ with Raku using:
 - Jupyter notebooks, [BDp1]
 - Mathematica notebooks, [AAp4]
 
-The use of JSON came to focus, since when working Large Language Model (LLM) functions, [AAp3],
+The use of JSON came to focus, since when working with Large Language Model (LLM) functions, [AAp3],
 very often it is requested from LLMs to produce output in JSON format, [AA1, AA2].
 
 The package "Data::Reshapers", [AAp1], would complement nicely "Data::Translators" and vice versa.
 The package "Data::TypeSystem", [AAp2], is used for "translation decisions" and for conversions into more regular datasets. 
 
-The package "Mathematica::Serializer", [AAp5], has very similar mission --
+The package "Mathematica::Serializer", [AAp5], has a very similar mission --
 it is for translating Raku data structures into Mathematica (aka Wolfram Language or WL) code.
 
 In order to utilize "Data::Translators" while doing Literate programming with:
@@ -125,6 +125,38 @@ my $json1 = q:to/END/;
 END
 
 data-translation($json1);
+```
+
+### From HTML strings
+
+Get the data of an HTML table as a Raku dataset (array of hashmaps). Here is an HTML table string:
+
+```raku
+sink my $html = q:to/END/;
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Age</th>
+        <th>City</th>
+    </tr>
+    <tr>
+        <td>John</td>
+        <td>25</td>
+        <td>New York</td>
+    </tr>
+    <tr>
+        <td>Alice</td>
+        <td>30</td>
+        <td>London</td>
+    </tr>
+</table>
+END
+```
+
+Here is the Raku dataset:
+
+```raku
+data-translation($html, target => 'dataset')
 ```
 
 ### Cross-tabulated data
