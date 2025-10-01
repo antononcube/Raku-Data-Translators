@@ -17,7 +17,7 @@ class Data::Translators::HTML {
         if $!field-names ~~ Str:D {
             $!field-names = [$!field-names,];
         }
-        if $!field-names ~~ Positional && !$!field-names {
+        if $!field-names ~~ (Array:D | List:D | Seq:D) && !$!field-names {
             $!field-names = Whatever
         }
     }
@@ -55,7 +55,7 @@ class Data::Translators::HTML {
     method column-headers-from-list-of-maps($json-input) {
         if is-reshapable($json-input, iterable-type => Positional, record-type => Map) {
             my @column-headers = $json-input[0].keys;
-            if $!field-names ~~ Positional && $!field-names.all ~~ Str:D {
+            if $!field-names ~~ (Array:D | List:D | Seq:D) && $!field-names.all ~~ (Str:D | Numeric:D) {
                 @column-headers = $!field-names.grep({ $_ ∈ @column-headers }).Array;
                 if !@column-headers {
                     note "An empty set of field names is obtained after filtering.";
