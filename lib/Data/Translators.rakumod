@@ -218,8 +218,11 @@ multi sub to-dataset($data where $data ~~ Numeric || $data ~~ Str || $data ~~ Da
 
 multi sub to-dataset($data, :$missing-value = '') {
     given $data {
-        when (is-reshapable(Iterable, Map, $_) || is-reshapable(Positional, Iterable,
-                $_)) && has-homogeneous-shape($_) {
+        when is-array-of-arrays($_) && $_.flat(:hammer).all ~~ (Numeric:D | Str:D) {
+            return $_.map(-> @r { (^@r.elems) Z=> @r })».Map.Array;
+        }
+
+        when (is-reshapable(Iterable, Map, $_) || is-reshapable(Positional, Iterable, $_)) && has-homogeneous-shape($_) {
             return $data;
         }
 
