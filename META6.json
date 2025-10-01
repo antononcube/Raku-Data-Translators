@@ -1,7 +1,7 @@
 {
   "name": "Data::Translators",
   "description": "Translation of datasets, JSON specs, or JSON-like data structures into other formats.",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "perl": "6.*",
   "authors": [
     "Anton Antonov"
@@ -9,7 +9,7 @@
   "auth": "zef:antononcube",
   "depends": [
     "JSON::Fast:ver<0.19+>",
-    "Data::TypeSystem:ver<0.1.2+>",
+    "Data::TypeSystem:ver<0.1.7+>",
     "Hash::Merge:ver<2.0.0+>:api<2+>"
   ],
   "build-depends": [],
