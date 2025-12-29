@@ -108,9 +108,15 @@ sub transpose(@tbl) {
 multi sub to-html(@data,
                   :multicolumn(:$multi-column)! is copy,
                   :cols(:ncol(:$columns)) is copy = Whatever,
+                  Bool:D :html(:$html-elements) = False,
                   *%args) {
 
     return to-html(@data, |%args) unless so $multi-column;
+
+    if $html-elements {
+        return (^@data.elems).&to-html(:multi-column, :$columns)
+                .subst(/ '<td>' (\d+) '</td>' /, { '<td>' ~ @data[$0.Str.Int] ~ '</td>' }, :g)
+    }
 
     if $multi-column.isa(Whatever) {$multi-column = True}
     if $columns.isa(Whatever) { $columns = 2 }
